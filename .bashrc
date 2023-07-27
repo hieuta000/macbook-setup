@@ -77,6 +77,3 @@ alias tda='tmux a -t da'
 alias tfe='tmux a -t fe'
 alias tco='tmux a -t co'
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
