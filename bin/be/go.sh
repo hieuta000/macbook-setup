@@ -1,1 +1,1 @@
-yarn dev
+PROCFILE=hieu.Profile yarn dev

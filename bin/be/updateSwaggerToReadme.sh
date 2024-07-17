@@ -1,1 +1,1 @@
-jq '.servers[0].url = $newVal' --arg newVal 'https://sky-services-api-qa.onrender.com' tsoa/swagger.json > tsoa/swagger-readme.com.json
+jq '.servers[0].url = $newVal' --arg newVal 'https://api.skyfire.xyz' tsoa/swagger.json > tsoa/swagger-readme.com.json

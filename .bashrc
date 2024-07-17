@@ -9,7 +9,7 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export LDFLAGS="-L/opt/homebrew/opt/node@16/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/node@16/include"
 
-export PATH="~/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/opt/node@16/bin:$PATH"
+export PATH="~/bin:/usr/local/sbin:/opt/homebrew/bin:/Users/hieuta/.local/bin:/opt/homebrew/opt/node@16/bin:$PATH"
 
 . ~/.git-prompt.sh
 
@@ -25,8 +25,9 @@ function getuuid {
 }
 export -f getuuid
 
-export WORK_DIR=~/work/supermojo
+export WORK_DIR=~/work/skyfire
 
+alias curl='curl --no-progress-meter'
 alias wk='cd $WORK_DIR'
 alias cp='cp -v'
 alias ll='ls -al'
@@ -73,28 +74,10 @@ alias yi='yarn install'
 alias yb='yarn build'
 alias yt='yarn test'
 alias yc='yarn build:client'
-alias hh='cd ~/work/supermojo/web6/packages/server;yarn hardhat node'
 alias yl='yarn lint'
 alias yibt='yi;yb;yt;yl'
 alias yitb='yibt'
 alias yib='yi;yb'
-
-alias tdump='sudo tcpdump -i any -A port'
-
-alias tnewbe='tmux new -s be'
-alias tnewma='tmux new -s ma'
-alias tnewwe='tmux new -s we'
-alias tnewda='tmux new -s da'
-alias tnewfe='tmux new -s fe'
-alias tnewco='tmux new -s co'
-
-alias tls='tmux ls'
-alias tbe='tmux a -t be'
-alias tma='tmux a -t ma'
-alias twe='tmux a -t we'
-alias tda='tmux a -t da'
-alias tfe='tmux a -t fe'
-alias tco='tmux a -t co'
 
 alias demo-1='ssh -i .ssh/id_rsa hieuta@34.66.15.83'
 alias sandbox-1='ssh -i .ssh/id_rsa hieuta@35.194.28.196'
@@ -115,10 +98,4 @@ alias twe='tmux a -t we'
 alias tda='tmux a -t da'
 alias tfe='tmux a -t fe'
 alias tco='tmux a -t co'
-
-alias tunnelQaWeb7='ssh -L 10000:localhost:10000 -i .ssh/id_rsa.pub srv-cpd15se74orc73f857v0@ssh.oregon.render.com'
-alias tunnelProdWeb7='ssh -L 10000:localhost:10000 -i .ssh/id_rsa.pub srv-cp7ro66d3nmc73f50u3g@ssh.oregon.render.com'
-
-
-
 
