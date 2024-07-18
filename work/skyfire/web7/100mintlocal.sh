@@ -1,0 +1,1 @@
+npx ts-node ./packages/server/scripts/prod/prod-mint-xls20.ts --xrplAddress rBAPQP3DeuXWCyKKUjWZDEhTsPyCbcLAM --issuer rMnt7GF5zBwAvvG7AaPWPMFi2dRKHLhurw --transferFee 10000 --network xrpl_testnet --pinataSecretApiKey 2a0847ba25438c6c291d8fcaa5b9f30ab64d8eae38824a14eb677b2e8aa5202b --metadatas ../../data/test-metadata/test-xls20 --usdMintPrice 10 --startAt  --limit 100

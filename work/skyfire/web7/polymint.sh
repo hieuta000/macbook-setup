@@ -1,0 +1,1 @@
+./packages/server/scripts/dev/dev-premint-polygon.ts --contractAddress 0xc66C4c4E49f3c1410F90EC172B362E80B4a60d8B --network polygon_testnet --limit 3 --metadataHash QmYpBzMk4niomaAo9GsTJmogYgoTjWbMLRemFXXDBKZGwr --usdMintPrice 10
