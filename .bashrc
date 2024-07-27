@@ -9,7 +9,7 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export LDFLAGS="-L/opt/homebrew/opt/node@16/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/node@16/include"
 
-export PATH="~/bin:/usr/local/sbin:/opt/homebrew/bin:/Users/hieuta/.local/bin:/opt/homebrew/opt/node@16/bin:$PATH"
+export PATH="~/bin:/usr/local/sbin:/opt/homebrew/bin:~/work/macbook-setup/bin:~/.local/bin:/opt/homebrew/opt/node@16/bin:$PATH"
 
 . ~/.git-prompt.sh
 
@@ -39,6 +39,8 @@ alias we='cd $WORK_DIR/web7'
 alias da='cd $WORK_DIR/sky-dashboard'
 alias ai='cd $WORK_DIR/aida-ai'
 alias sdk='cd $WORK_DIR/skyfire-sdk'
+alias mac='cd ~/work/macbook-setup'
+
 alias gohh='cd packages/server; direnv allow; npx ts-node payment_deploy.ts; npx ts-node hieu_payment_deploy.ts'
 
 alias g='git'
