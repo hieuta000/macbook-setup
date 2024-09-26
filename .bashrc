@@ -68,7 +68,15 @@ alias gdhh8='git diff HEAD~8 HEAD'
 alias gprcreate='gh pr create --fill'
 alias gprcopy='gh pr view --json url --jq '.url' | pbcopy'
 alias gprview='gprcopy;gh pr view --web'
-alias gloc='git ls-files --exclude-standard -- ':!:**/*.[pjs][npv]g' ':!:**/*.ai' ':!:.idea' ':!:**/*.eslintrc' ':!:package-lock.json' | xargs wc -l'
+
+#':!:**/*.[pjs][npv]g' excludes all png, jpg and svg files.
+#':!:**/*.ai' excludes .ai files.
+#':!:.idea' excludes the .idea (WebStorm anyone?) folder.
+#':!:**/*.eslintrc' excludes .eslint files.
+#':!:package-lock.json' excludes the biggest offender of all (was over 1/2 my original count).
+#':!:**.sh' excludes .sh files
+#':!:**/migrations/*' excludes migrations directory
+alias gloc='git ls-files --exclude-standard -- ':!:**/*.[pjs][npv]g' ':!:**/*.ai' ':!:**.sh' ':!:**/migrations/*' ':!:.idea' ':!:**/*.eslintrc' ':!:package-lock.json' | xargs wc -l'
 
 alias yp='yarn prisma migrate dev'
 alias ypmd='yarn prisma migrate dev'
