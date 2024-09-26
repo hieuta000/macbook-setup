@@ -66,6 +66,7 @@ alias gdhh8='git diff HEAD~8 HEAD'
 alias gprcreate='gh pr create --fill'
 alias gprcopy='gh pr view --json url --jq '.url' | pbcopy'
 alias gprview='gprcopy;gh pr view --web'
+alias gloc='git ls-files --exclude-standard -- ':!:**/*.[pjs][npv]g' ':!:**/*.ai' ':!:.idea' ':!:**/*.eslintrc' ':!:package-lock.json' | xargs wc -l'
 
 alias yp='yarn prisma migrate dev'
 alias ypmd='yarn prisma migrate dev'
