@@ -1,4 +1,5 @@
-export PS1=$'\[\e]2;${USER}@\h::$PWD\[\a\]\[\e]1;${USER}@\h \W \a\]\[\033[1;33m\]\u\[\033[0m\]@\h:\[\033[36m\][\w$(__git_ps1 " (%s)")]:\[\033[0m\] '
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # ignore case
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} = # colorz !
 
 umask 0002
 
@@ -9,23 +10,22 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export LDFLAGS="-L/opt/homebrew/opt/node@16/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/node@16/include"
 
-export PATH="~/bin:/usr/local/sbin:/opt/homebrew/bin:~/work/macbook-setup/bin:~/.local/bin:/opt/homebrew/opt/node@16/bin:$PATH"
-
-. ~/.git-prompt.sh
-
-eval "$(direnv hook bash)"
-eval "$(fnm env --use-on-cd)"
-
-export PYTHON=/opt/homebrew/bin/python3
-
-function getuuid {
-    uuid=$(uuidgen | tr 'A-Z' 'a-z' | tr -d '\n')
-    (osascript -e "display notification with title \"⌘-V to paste\" subtitle \"$uuid\"" &) >/dev/null 2>&1
-    echo -n "$uuid" | pbcopy
-}
-export -f getuuid
-
 export WORK_DIR=~/work/skyfire
+
+export PATH="~/bin":$PATH
+export PATH="/Applications/Docker.app/Contents/Resources/bin":$PATH
+export PATH="/Users/hieuta/.local/state/fnm_multishells/12068_1725750187485/bin":$PATH
+export FNM_ARCH="arm64"
+export FNM_LOGLEVEL="info"
+export FNM_DIR="/Users/hieuta/.local/share/fnm"
+export FNM_VERSION_FILE_STRATEGY="local"
+export FNM_RESOLVE_ENGINES="false"
+export FNM_MULTISHELL_PATH="/Users/hieuta/.local/state/fnm_multishells/12068_1725750187485"
+export FNM_COREPACK_ENABLED="false"
+export FNM_NODE_DIST_MIRROR="https://nodejs.org/dist"
+rehash
+
+bindkey '^ ' autosuggest-accept
 
 alias curl='curl --no-progress-meter'
 alias wk='cd $WORK_DIR'
@@ -68,7 +68,6 @@ alias gdhh8='git diff HEAD~8 HEAD'
 alias gprcreate='gh pr create --fill'
 alias gprcopy='gh pr view --json url --jq '.url' | pbcopy'
 alias gprview='gprcopy;gh pr view --web'
-alias gloc='git ls-files --exclude-standard -- ':!:**/*.[pjs][npv]g' ':!:**/*.ai' ':!:.idea' ':!:**/*.eslintrc' ':!:package-lock.json' | xargs wc -l'
 
 alias yp='yarn prisma migrate dev'
 alias ypmd='yarn prisma migrate dev'
