@@ -95,6 +95,7 @@ alias demo-1='ssh -i .ssh/id_rsa hieuta@34.66.15.83'
 alias sandbox-1='ssh -i .ssh/id_rsa hieuta@35.194.28.196'
 
 alias tdump='sudo tcpdump -i any -A port'
+alias sqldump='sudo tcpdump -i lo0 -s 0 -l -w - dst port 54322'
 
 alias tnewbe='tmux new -s be'
 alias tnewma='tmux new -s ma'
