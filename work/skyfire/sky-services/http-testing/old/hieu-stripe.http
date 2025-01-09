@@ -1,0 +1,27 @@
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+###
+# Stripe
+# @name createStripeSession
+POST {{url}}/top-up/create-top-up-session
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Balance Funding Wallet
+GET {{url}}/admin/wallet/funding-wallet-balances
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

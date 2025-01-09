@@ -1,0 +1,44 @@
+@api-key=sk-test-9075ad3c56ca89e85444437ef17e3a41
+@bridgeUrl=https://api.sandbox.bridge.xyz
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+
+### 
+# New Customer TOS
+# @name newCustomer TOS Response
+POST {{bridgeUrl}}/v0/customers/tos_links
+Idempotency-Key: {{$guid}}
+API-Key: {{api-key}}
+
+###
+# Create New Customer
+# @name newCustomerResponse
+POST {{bridgeUrl}}/v0/customers
+Idempotency-Key: {{$guid}}
+API-Key: {{api-key}}
+content-type: application/json
+
+{
+  "type": "individual",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "{{newEmail}}",
+  "phone": "+12223334444",
+  "address": {
+    "street_line_1": "1234 Lombard Street",
+    "street_line_2": "Apt 2F",
+    "city": "San Francisco",
+    "state": "CA",
+    "postal_code": "94109",
+    "country": "USA"
+  },
+  "signed_agreement_id": "{{$guid}}",
+  "birth_date": "1989-09-09",
+  "tax_identification_number": "111-11-1111"
+}
+
+###
+# Get Customer
+# @name getCustomerResponse
+GET {{bridgeUrl}}/v0/customers/{{newCustomerResponse.response.body.id}}
+API-Key: {{api-key}}
+content-type: application/json

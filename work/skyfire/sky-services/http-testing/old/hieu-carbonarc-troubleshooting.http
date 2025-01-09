@@ -1,0 +1,79 @@
+@email=alice.7cee21c248bf405b8f6992a116e3d7fb@nowhere.com
+
+###
+# health
+GET {{url}}/health
+
+###
+# Get Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-email/carbonarc@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{email}}"
+}
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/enterprise/admin/users/organizationUser/{{email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# STEP 7. Make Payment that DOES NOT EXCEED the wallet balance
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: 7d715600-7a22-49c6-aed6-a8d9235a1a80
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "CarbonArc",
+      "amount": "0.0001",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# STEP 8. USER: Check organization wallet balance
+GET {{url}}/wallet/balance
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json

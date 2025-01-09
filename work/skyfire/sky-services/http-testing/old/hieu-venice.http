@@ -1,0 +1,56 @@
+@apiKey=TkWIUEM-QTIV2t9MaB5QvFsyVKLcoyTWA7FKEza9fX
+@veniceUrl=https://api.venice.ai
+
+###
+# Chat
+# @name chat
+GET {{veniceUrl}}/api/v1/models
+Authorization: Bearer {{apiKey}}
+Content-Type: application/json
+
+
+###
+# Chat
+# @name chat
+POST {{veniceUrl}}/api/v1/chat/completions
+Authorization: Bearer {{apiKey}}
+Content-Type: application/json
+
+{
+  "model": "nous-hermes-8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ],
+  "stream": false
+}
+
+
+
+###
+# Chat
+# @name chat
+GET {{proxyUrl}}/proxy/venice-ai/api/v1/models
+skyfire-api-key: {{hieuApiKey}}
+Content-Type: application/json
+
+
+###
+# Chat
+# @name chat
+POST {{proxyUrl}}/proxy/venice-ai/api/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+Content-Type: application/json
+
+{
+  "model": "nous-hermes-8b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ],
+  "stream": false
+}

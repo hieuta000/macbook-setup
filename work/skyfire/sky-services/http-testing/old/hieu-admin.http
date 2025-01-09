@@ -1,0 +1,170 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@newUserName = user-{{$randomInt 20001 30000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# Transfer from QA Treasury to Dev Treasury
+# @name transferResponse
+POST {{url}}/admin/wallet/transfer
+
+
+###
+# Get Hieu Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/{{fullUserData.response.body.defaultWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}",
+  "userType": "Sender"
+}
+
+###
+# Patch Sender 
+# @name createdUser
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{fullUserData.response.body.email}}",
+  "username": "{{newUserName}}"
+}
+
+###
+# Create Receiver 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}",
+  "userType": "Receiver",
+  "cost": 1000,
+  "isInternal": true
+}
+
+###
+# Create NEW Receiver Wallet
+# @name newWalletUser
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{fullUserData.response.body.user.email}}"
+}
+
+###
+# Get Hieu Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Change Receiver Wallet
+# @name createdUser
+POST {{url}}/admin/wallet/auxiliary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{fullUserData.response.body.user.email}}",
+  "amount": 1000000000000000000
+}
+
+###
+# Patch Receiver 
+# @name fullUserData
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{fullUserData.response.body.email}}",
+  "username": "{{newUserName}}",
+  "isProxy": true,
+  "basePath": "/chat",
+  "proxyUrl": "https://api.skyfire.xyz",
+  "allowList": ["/chat/completion"],
+  "blockList": ["/chat/transfer"],
+  "cost": 2000,
+  "freeList": ["/chat/free"]
+}
+
+###
+# Get Receiver
+# @name receiverUser
+GET {{url}}/admin/users/receiver/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "0x95Dc791C3aA7a5AcFd60a3402DF525CA1107A119",
+  "network": "{{networkCT}}",
+  "tokenAmount": "10"
+}
+
+###
+# Get Receiver
+# @name receiverUser
+DELETE {{url}}/admin/users/f6a4bbee-a659-4723-911c-e56cb593e8fc
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# ADMIN API
+# Get Wallet Balance by address
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/0xacF7C439001e165BbfA5813a40b80DEF74D505B6
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund HIEU Wallet Production
+# @name fundWalletResponse
+POST https://api.skyfire.xyz/v1/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "0xacF7C439001e165BbfA5813a40b80DEF74D505B6",
+  "network": "{{networkCM}}",
+  "tokenAmount": "10000000"
+}

@@ -1,0 +1,270 @@
+@orgName = Hieu Org {{$randomInt 1001 5000}}
+@newEmail = hieu-{{$randomInt 20001 30000}}@skyfire.xyz
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# Create Receiver Carbon Arc 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "HieuEnterpriseDev-{{$randomInt 1001 5000}}@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": true, 
+  "cost": 1022,
+  "isEnterpriseAdmin": true
+}
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{createdUser.response.body.user.email}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Data Provider 1
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Data Provider 1",
+  "email": "data-provider-1@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": true, 
+  "network": "{{network}}",
+  "cost": 1022,
+  "isEnterpriseAdmin": false
+}
+
+###
+# Create Data Provider 2 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Data Provider 2",
+  "email": "data-provider-2@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": true, 
+  "cost": 1022,
+  "isEnterpriseAdmin": false
+}
+
+###
+# ENTERPRISE ADMIN Add Organization
+# @name orgResponse
+POST {{url}}/enterprise/admin/organizations
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "name": "{{orgName}}"
+}
+
+###
+# ENTERPRISE ADMIN Add Second Organization
+# @name orgResponse2
+POST {{url}}/enterprise/admin/organizations
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "name": "{{orgName}}"
+}
+
+###
+# ENTERPRISE ADMIN Delete Organization
+# @name walletDeleteResponse
+DELETE {{url}}/enterprise/admin/organizations/id/{{orgResponse.response.body.id}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# ENTERPRISE ADMIN Get Organization By Id
+GET {{url}}/enterprise/admin/organizations/id/{{orgResponse.response.body.id}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# ENTERPRISE ADMIN Add Wallet to Organization
+# @name walletResponse
+POST {{url}}/enterprise/admin/organizations/wallet
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "organizationName": "{{orgResponse.response.body.name}}",
+    "walletType": "Sender"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/{{walletResponse.response.body.walletAddress}} 
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# ENTERPRISE ADMIN Delete Wallet to Organization
+# @name walletResponse
+DELETE {{url}}/enterprise/admin/organizations/wallet/id/{{walletResponse.response.body.id}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# ENTERPRISE ADMIN Add New User
+# @name newUserResponse
+POST {{url}}/enterprise/admin/users/organizationUser
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newEmail}}",
+    "organizationName": "{{orgResponse.response.body.name}}",
+    "attributes": {
+        "firstName": "Alice",
+        "lastName": "Smith",
+        "phone": "1234567890",
+        "address": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "USA",
+        "carbonArcID": "1234567890"
+    }
+}
+
+###
+# ENTERPRISE ADMIN Move User
+# @name newUserResponse2
+POST {{url}}/enterprise/admin/users/organizationUser/move
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newUserResponse.response.body.user.email}}",
+    "fromOrganizationName": "{{orgResponse.response.body.name}}",
+    "toOrganizationName": "{{orgResponse2.response.body.name}}"
+}
+
+###
+# ENTERPRISE ADMIN Move User Back
+# @name newUserResponse3
+POST {{url}}/enterprise/admin/users/organizationUser/move
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newUserResponse.response.body.user.email}}",
+    "fromOrganizationName": "{{orgResponse2.response.body.name}}",
+    "toOrganizationName": "{{orgResponse.response.body.name}}"
+}
+
+###
+# Create API-Key for user
+# @name newUserApiKeyResponse
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newUserResponse.response.body.user.email}}"
+}
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{newUserResponse.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN Impersonate Session for New User
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newUserResponse.response.body.user.email}}"
+}
+
+###
+# USER: Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# USER: Check organization wallet balance
+GET {{url}}/wallet/balance
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json
+
+###
+# ENTERPRISE ADMIN Get User
+# @name getUserResponse
+GET {{url}}/enterprise/admin/users/organizationUser/{{newUserResponse.response.body.user.email}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# USER: Get All Org Wallets Dashboard
+# @name meResponse
+GET {{url}}/wallet/organizations
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Make Group Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "CarbonArc",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# ENTERPRISE ADMIN: Validate Payment
+GET {{url}}/enterprise/admin/payments/validate?externalId={{payment.request.body.externalId}}&senderEmail={{newUserResponse.response.body.email}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json

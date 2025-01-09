@@ -1,0 +1,141 @@
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get User Rules
+# @name userRulesResponse
+GET {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get User Rules - API KEY
+# @name userRulesResponse
+GET {{url}}/users/rules
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Add User Limits
+POST {{url}}/users/rules
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "type": "TRANSACTION",
+  "amount": ".001"
+  
+}
+
+###
+# Add User Limits for SlangAgent
+POST {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "type": "TRANSACTION",
+  "amount": ".01",
+  "targetWalletAddress": "0xb90376944F0fe36Ed005ec20963dB0d04E24058d"
+}
+
+###
+# Add User Limits for SlangAgent
+POST {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "type": "DURATION",
+  "frequency": "SEVEN_DAY",
+  "amount": "100000",
+  "targetWalletAddress": "0xb90376944F0fe36Ed005ec20963dB0d04E24058d"
+}
+
+###
+# Remove User Limit
+DELETE {{url}}/users/rules/{{userRulesResponse.response.body.rules[0].id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "SlangAgent",
+      "amount": ".002",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# OpenAI
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openai/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

@@ -1,0 +1,135 @@
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Another Primary Coinbase Wallet
+# @name primaryWalletResponse
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{meResponse.response.body.email}}",
+  "userType": "Sender",
+  "network": "coinbase_hardhat_mainnet"
+}
+
+###
+# Get My Wallets
+# @name myWalletsResponse
+GET {{url}}/admin/wallet/email/{{meResponse.response.body.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Wallet Balances
+# @name myWalletsResponseBalance
+GET {{url}}/admin/wallet/balance/{{meResponse.response.body.mainWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Switch Wallet
+GET {{url}}/admin/wallet/switch-default-wallet/id/{{myWalletsResponse.response.body.wallets[1].id}}
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Delete Wallet
+DELETE {{url}}/admin/wallet/delete/{{myWalletsResponse.response.body.wallets[0].id}}
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Create Main Wallet
+# @name mainWalletResponse
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Create Secondary Wallet
+# @name secondWalletResponse
+POST {{url}}/admin/wallet/create-second-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+
+###
+# Update Wallet
+# @name updateWalletResponse
+POST {{url}}/wallet/update
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "walletId": "{{meResponse.response.body.mainWallet.id}}",
+  "walletName": "Main",
+  "network": "coinbase_hardhat_mainnet"
+}
+
+###
+# Create Default Wallet
+# @name mainWalletResponse
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Check balance of wallet
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get Balance of Default Wallet
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Check All balances of wallet
+GET {{url}}/admin/wallet/balance/{{meResponse.response.body.mainWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Fund Wallet
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "0x3a24DFF292eFE2f55d8CD80891B75625E2ff5786",
+  "network": "coinbase_testnet"
+}

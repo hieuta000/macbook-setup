@@ -1,0 +1,65 @@
+@receiverName=Receiver-{{$randomInt 20001 30000}}
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@amount=.00{{$randomInt 1001 5000}}
+
+
+###
+# Create ChatGPT Receiver, coin amount should 
+# @name createdUser1
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "{{receiverName}}",
+  "email": "{{newEmail}}",
+  "userType": "Receiver",
+  "cost": 0,
+  "isInternal": true
+}
+
+###
+# Create ChatGPT Receiver, coin amount should 
+# @name createdUser2
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "{{receiverName}}",
+  "email": "{{newEmail}}",
+  "userType": "Receiver",
+  "cost": 0,
+  "isInternal": true
+}
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "{{createdUser1.response.body.username}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    },
+    {
+      "receiverUsername": "{{createdUser2.response.body.username}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}

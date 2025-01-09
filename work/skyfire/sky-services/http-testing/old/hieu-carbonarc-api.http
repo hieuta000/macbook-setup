@@ -1,0 +1,31 @@
+@clientId=skyfire
+@carbonarcApiKey=tFnCPhhwgEnv2Mr43LxOvnzr7eJ2VCfm_QtYW7UQOzo
+@carbonArcUrl=https://api.carbonarc.co/v1
+
+###
+# Insights Data
+POST {{carbonArcUrl}}/insights/location_geographic_consumption_us_pos_pos_spend_normalized_us_week/data
+x-api-key: {{carbonarcApiKey}}
+client_id: {{clientId}}
+content-type: application/json
+
+{
+  "filters": {
+    "entities": ["United States of America"],
+    "date_range": { "start_date": "2019-06-29", "end_date": "2024-11-22" }
+  }
+}
+
+###
+# Insights Metadata
+GET {{carbonArcUrl}}/insights/location_geographic_consumption_us_pos_pos_spend_normalized_us_week/metadata
+x-api-key: {{carbonarcApiKey}}
+client_id: {{clientId}}
+content-type: application/json
+
+###
+# Ontology
+GET {{carbonArcUrl}}/ontology/entities
+x-api-key: {{carbonarcApiKey}}
+client_id: {{clientId}}
+content-type: application/json

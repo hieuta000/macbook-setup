@@ -1,0 +1,154 @@
+###
+# API Ninja
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/api-ninja/v1/stockprice?ticker=GOOGL
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Flush Caches
+GET {{url}}/admin/users/flush-caches
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create API Ninja Receiver, coin amount should 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "API Ninja",
+  "email": "apininja@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": false, 
+  "cost": 1005,
+  "basePath": "/api-ninja",
+  "proxyUrl": "https://api.api-ninjas.com/",
+  "isProxy": true,
+  "headers": {
+    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+  }
+}
+
+
+###
+# Create Perplexity Receiver, coin amount should 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Perplexity",
+  "email": "perplexity@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": false, 
+  "cost": 1001,
+  "basePath": "/perplexity",
+  "proxyUrl": "https://api.perplexity.ai/",
+  "isProxy": true,
+  "headers": {
+    "Authorization": "Bearer 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"
+  },
+  "allowList": [
+    "/chat/completions"
+  ],
+  "blockList": [
+    "/chat/completions/foo"
+  ],
+  "freeList": [
+    "/chat/completions"
+  ]
+}
+
+###
+# Patch Receiver 
+# @name createdUser
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{createdUser.response.body.email}}",
+  "basePath": "/perplexity",
+  "proxyUrl": "https://api.perplexity.ai/",
+  "isProxy": true,
+  "headers": {
+    "Authorization": "Bearer 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"
+  },
+  "allowList": [
+    "/chat/completions"
+  ],
+  "blockList": [
+    "/chat/completions/foo"
+  ],
+  "freeList": [
+    "/chat/completions"
+  ]
+}
+
+###
+# Perplexity
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/perplexity/chat/completions/
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "llama-3.1-sonar-small-128k-online",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# API Ninja
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/api-ninja2/v1/stockprice?ticker=GOOGL
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Patch API Ninja Receiver 
+# @name createdUser
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "apininja@skyfire.xyz",
+  "isProxy": true,
+  "basePath": "/api-ninja",
+  "proxyUrl": "https://api.api-ninjas.com/",
+  "isProxy": true,
+  "headers": {
+    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+  }
+}
+
+###
+# Patch Perplexit Receiver 
+# @name createdUser
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "perplexity@skyfire.xyz",
+  "isProxy": true,
+  "basePath": "/perplexity",
+  "proxyUrl": "https://api.perplexity.ai/",
+  "isProxy": true,
+  "headers": {
+    "Authorization": "Bearer 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"
+  },
+  "allowList": [
+    "/chat/completions"
+  ]
+}

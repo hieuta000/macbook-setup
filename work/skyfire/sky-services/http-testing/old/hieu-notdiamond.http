@@ -1,0 +1,33 @@
+@notDiamondBaseUrl=https://api.notdiamond.ai
+@notDiamondApiKey=sk-8dc23c303078e19e3bb12b08809c91eb54dc9f2953da3356
+
+###
+# Get Route
+POST {{notDiamondBaseUrl}}/v2/modelRouter/modelSelect
+Content-Type: application/json
+Authorization: Bearer {{notDiamondApiKey}}
+
+{
+  "messages": [
+    {
+        "role": "user", 
+        "content": "What is the meaning of life?"
+    }
+  ],
+  "tradeoff": "cost",
+  "llm_providers": [
+    {
+      "provider": "openai",
+      "model": "gpt-3.5-turbo"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4-1106-preview"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-opus-20240229"
+    }
+  ],
+  "max_model_depth": 2
+}

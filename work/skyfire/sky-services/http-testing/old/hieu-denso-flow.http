@@ -1,0 +1,91 @@
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# Create Denso Sender
+# @name senderUser1
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Denso",
+  "email": "denso@skyfire.xyz",
+  "userType": "Sender",
+  "network": "{{network}}"
+}
+
+###
+# Create Car Appraiser Receiver 
+# @name receiverUser1
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Car-Appraiser",
+  "email": "appraiser@skyfire.xyz",
+  "userType": "Receiver",
+  "network": "{{network}}",
+  "isInternal": true, 
+  "cost": 1015
+}
+
+###
+# Create API-Key for Sender
+# @name senderUserApiKey
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "denso@skyfire.xyz"
+}
+
+###
+# Create API-Key for Receiver1
+# @name receiverUserApiKey
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "appraiser@skyfire.xyz"
+}
+
+###
+# Payment1: User Making First Payment to EmergenceReceiver1
+# @name payment1
+POST {{url}}/payment
+skyfire-api-key: {{senderUserApiKey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "payments": [
+    {
+      "receiverUsername": "Car-Appraiser",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# ADMIN: Log in as Receiver to Validate Payment
+# @name receiverSessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "appraiser@skyfire.xyz"
+}
+
+###
+# Receiver Validate Payment
+GET {{url}}/payment/id/{{payment1.response.body.claimGroup.externalId}}
+skyfire-api-key: {{receiverUserApiKey.response.body.apiKey}}
+content-type: application/json

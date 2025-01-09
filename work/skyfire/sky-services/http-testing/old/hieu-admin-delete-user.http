@@ -1,0 +1,114 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN API
+# Flush Caches
+GET {{url}}/admin/users/flush-caches
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Main Wallet
+# @name createdUserWallet
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{meResponse.response.body.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": ".01",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# ADMIN: Redeem
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{payment.response.body.claimGroup.attributes[0].payment.sourceAddress}}",
+  "destinationAddress": "{{payment.response.body.claimGroup.attributes[0].payment.destinationAddress}}",
+  "network": "{{payment.response.body.claimGroup.attributes[0].payment.network}}"
+}
+
+###
+# ADMIN API
+# Drain Wallet
+POST {{url}}/admin/wallet/drain
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{createdUserWallet.response.body.walletAddress}}",
+  "network": "{{createdUserWallet.response.body.network}}"
+}
+
+###
+# Delete User
+# @name deletedUser
+DELETE {{url}}/admin/users/{{createdUser.response.body.user.id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

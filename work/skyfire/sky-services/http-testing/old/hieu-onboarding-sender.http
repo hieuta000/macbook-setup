@@ -1,0 +1,104 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Main Wallet
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Patch UserName
+# @name meResponse
+PATCH {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "username": "hieutest"
+}
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# OpenAI
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openai/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }1572
+  ]
+}
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# ADMIN: Fund Wallet
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{myWalletsResponse.response.body.wallet.walletAddress}}",
+  "network": "{{myWalletsResponse.response.body.wallet.network}}"
+}

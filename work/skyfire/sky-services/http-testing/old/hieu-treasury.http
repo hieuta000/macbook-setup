@@ -1,0 +1,124 @@
+@hieuApiKey=adb849e1-def1-4ae5-963e-ff26437b99c6
+@localUrl=http://localhost:3000
+@url={{localUrl}}/v1
+@proxyUrl={{localUrl}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "admin@skyfire.xyz"
+}
+
+###
+# Start on-boarding
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Main Wallet
+# @name mainWalletResponse
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Patch User
+PATCH {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "username": "{{meResponse.response.body.email}}",
+  "isOnboarded": true
+
+}
+
+###
+# Create Polygon Second Wallet
+# @name secondWalletResponse
+POST {{url}}/users/second-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender",
+  "network": "coinbase_hardhat_mainnet"
+}
+
+###
+# Start on-boarding
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# [Admin] Check balance of wallet
+GET {{url}}/admin/wallet/balance/{{meResponse.response.body.mainWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# Admin Redeem
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "0xb20A37c6Cb900ede26EFbBc20F21247AdFB714F6",
+  "destinationAddress": "{{openRouterWallet}}"
+}
+
+###
+# Check claims
+GET {{url}}/wallet/claims
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# Check Redemptions
+GET {{url}}/wallet/redemptions
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}

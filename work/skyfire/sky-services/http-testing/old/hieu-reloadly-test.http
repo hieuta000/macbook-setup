@@ -1,0 +1,116 @@
+###
+# Country Info
+# @name giftCardResponse
+GET {{url}}/receivers/reloadly/countries
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Product Info
+# @name giftCardResponse
+GET {{url}}/receivers/reloadly/product-info/amazon
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Product Info
+# @name giftCardResponse
+GET {{url}}/receivers/reloadly/product-info/country/us
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Gift Card
+# @name giftCardResponse
+POST {{url}}/receivers/reloadly/gift-card
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "recipientEmail": "hieu@skyfire.xyz",
+  "productId": 5,
+  "countryCode": "US",
+  "note": "Hi Hieu, US Card",
+  "amount": 1,
+  "sendEmail": false
+}
+
+###
+# Gift Card
+# @name giftCardResponse
+POST {{url}}/receivers/reloadly/gift-card
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "recipientEmail": "hieu@skyfire.xyz",
+  "productId": 18271,
+  "countryCode": "NL",
+  "note": "Hi Hieu, NL Card",
+  "amount": 2,
+  "sendEmail": true
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{giftCardResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Email Dump
+POST {{url}}/receivers/api-toolkit/send-email
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "recipientEmail": "hieu@skyfire.xyz",
+  "emailData": {
+    "transactionId": "8207030759",
+    "amount": 5.955,
+    "discount": 0.05,
+    "currencyCode": "USD",
+    "fee": 1,
+    "smsFee": 0,
+    "totalFee": 1,
+    "preOrdered": false,
+    "recipientEmail": "hieu@skyfire.xyz",
+    "customerIdentifier": "b2f86ba1-95b2-4572-b6a0-c880180881c5",
+    "status": "SUCCESSFUL",
+    "transactionCreatedTime": "2024-08-04T02:01:00.766Z",
+    "product": {
+      "productId": 5,
+      "countryCode": "US",
+      "productName": "Amazon",
+      "quantity": 1,
+      "unitPrice": 5,
+      "totalPrice": 5,
+      "currencyCode": "USD",
+      "brand": {
+        "brandId": 2,
+        "brandName": "Amazon"
+      }
+    }
+  }
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{giftCardResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# ADMIN: Redeem
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{claimByReferenceId.response.body.sourceAddress}}",
+  "destinationAddress": "{{claimByReferenceId.response.body.destinationAddress}}",
+  "network": "{{claimByReferenceId.response.body.network}}"
+}

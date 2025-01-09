@@ -1,0 +1,275 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create Main Wallet
+POST {{url}}/users/main-wallet
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "userType": "Sender"
+}
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{meResponse.response.body.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# OpenAI
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openai/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# Search Getty with Skyfire
+# @name searchSkyfireResponse
+GET {{url}}/receivers/getty-images/search/images/creative?phrase=beaches&page=1&page_size=10
+skyfire-api-key: {{apikey.response.body.apiKey}}
+accept: application/json
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# API Ninja
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/api-ninja/v1/stockprice?ticker=GOOGL
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create API Ninja Receiver, coin amount should 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "API Ninja",
+  "userType": "Receiver",
+  "email": "apininja@skyfire.xyz",
+  "cost": 1005,
+  "basePath": "/api-ninja",
+  "proxyUrl": "https://api.api-ninjas.com/",
+  "isProxy": true,
+  "isInternal": false, 
+  "headers": {
+    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+  }
+}
+
+###
+# API Ninja
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/api-ninja/v1/stockprice?ticker=GOOGL
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Perplexity Receiver, coin amount should 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Perplexity",
+  "email": "perplexity@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1001,
+  "basePath": "/perplexity",
+  "proxyUrl": "https://api.perplexity.ai/",
+  "isProxy": true,
+  "isInternal": false, 
+  "headers": {
+    "Authorization": "Bearer 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"
+  },
+  "allowList": [
+    "/chat/completions"
+  ],
+  "blockList": [
+    "/chat/completions/foo"
+  ],
+  "freeList": [
+    "/chat/completions"
+  ]
+}
+
+###
+# Perplexity
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/perplexity/chat/completions/
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "llama-3.1-sonar-small-128k-online",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get User Rules
+# @name userRulesResponse
+GET {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Add User Limits
+POST {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+{
+  "type": "TRANSACTION",
+  "amount": ".001"
+  
+}
+
+###
+# Make Payment SHOULD FAIL
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "1",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# Get User Rules
+# @name userRulesResponse
+GET {{url}}/users/rules
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Remove User Limit
+DELETE {{url}}/users/rules/{{userRulesResponse.response.body.rules[0].id}}
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+

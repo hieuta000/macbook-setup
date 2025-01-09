@@ -1,0 +1,45 @@
+###
+# Create Coinbase MPC Wallet 
+# @name createdUser
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "yuga.cohler@coinbase.com",
+  "network": "{{networkCM}}",
+  "custodyProvider": "SKYFIRE_COINBASE_MPC",
+  "isSmartWallet": true
+}
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get My Wallets
+# @name myWalletsResponse
+GET {{url}}/admin/wallet/email/{{meResponse.response.body.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Wallet Balances
+# @name myWalletsResponseBalance
+GET {{url}}/admin/wallet/balance/{{meResponse.response.body.mainWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

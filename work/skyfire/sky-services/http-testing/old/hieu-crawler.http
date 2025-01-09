@@ -1,0 +1,75 @@
+###
+# @name foo
+GET {{url}}/receivers/foo
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{createdUser.response.body.defaultWallet.walletAddress}}",
+  "network": "{{networkCT}}",
+  "tokenAmount": "10"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get User Full Data 
+# @name fullUserData2
+GET {{url}}/admin/users/by-email/crawler-ai@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Delete Crawler Sender
+# @name deleteCrawlerSender
+DELETE {{url}}/admin/users/{{fullUserData2.response.body.user.id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Crawler - Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "CrawlerAI-Sender",
+  "email": "crawler-ai-sender@skyfire.xyz",
+  "userType": "Sender"
+}
+
+###
+# Crawler - Receiver 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "CrawlerAI",
+  "email": "crawler-ai@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1000
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData2.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

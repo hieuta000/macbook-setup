@@ -1,0 +1,100 @@
+###
+# Create Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "akamai-sender1",
+  "email": "akamai-sender1@skyfire.xyz",
+  "userType": "Sender"
+}
+
+###
+# Create API Key
+# @name apiKeyResponse
+POST {{url}}/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "akamai-sender1@skyfire.xyz"
+}
+
+###
+# Get Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/akamai-sender1@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "akamai-sender2",
+  "email": "akamai-sender2@skyfire.xyz",
+  "userType": "Sender"
+}
+
+###
+# ADMIN: Fund Wallet - $1
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}",
+  "tokenAmount": "1"
+}
+
+###
+# Create API Key
+# @name apiKeyResponse
+POST {{url}}/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "akamai-sender2@skyfire.xyz"
+}
+
+###
+# Get Full Data
+# @name fullUserData2
+GET {{url}}/admin/users/by-email/akamai-sender2@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData2.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Drain Wallet
+POST {{url}}/admin/wallet/drain
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{fullUserData2.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData2.response.body.defaultWallet.network}}"
+}

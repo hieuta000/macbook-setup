@@ -1,0 +1,67 @@
+@apiKey=!@RC_45W1-+rrE
+@netnutUrl=https://proxy-api.netnut.io
+@netnutUser=hieuta
+@netnutKey=7JOizFSHLMiSPyg
+
+###
+# Proxy Login
+# @name proxyLogin
+POST {{netnutUrl}}/api/v1/proxy-login
+Content-Type: application/json
+
+{
+    "proxyUsername": "{{netnutUser}}",
+    "proxyKey": "{{apiKey}}"   
+}
+
+
+###
+# Proxy
+POST {{netnutUrl}}/api/v1/proxy
+Authorization: {{proxyLogin.response.body.message}}
+Content-Type: application/json
+
+{
+    "proxyPassword": "{{netnutKey}}",
+    "url": "https://skyfire.xyz",
+    "country": "US"
+}
+
+
+###
+# Skyfire Endpoint
+# @name receiverResponse
+POST {{url}}/receivers/netnut
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "url": "https://skyfire.xyz",
+    "country": "US"
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz"
+}
+
+###
+# Get Events
+# @name eventsResponse
+GET {{url}}/events?eventNames=Claim&trackIds={{claimByReferenceId.response.body.destinationAddress}}
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json

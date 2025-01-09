@@ -1,0 +1,14 @@
+###
+# health
+GET {{url}}/health
+
+###
+# Get My Wallets
+# @name myWalletsResponse
+POST {{url}}/admin/wallet/createFundingWallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "network": "coinbase_hardhat_mainnet"
+}

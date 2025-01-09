@@ -1,0 +1,171 @@
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN: Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "akamai-poc@skyfire.xyz"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Receivers List
+GET {{url}}/users/receivers/list
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# Get Claims
+GET {{url}}/wallet/claims
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# Create API Key
+# @name apikey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
+content-type: application/json
+
+
+###
+# ADMIN: Redeem
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{claimByReferenceId.response.body.sourceAddress}}",
+  "destinationAddress": "{{claimByReferenceId.response.body.destinationAddress}}",
+  "network": "{{claimByReferenceId.response.body.network}}"
+}
+
+###
+# Get Redemptions
+GET {{url}}/wallet/redemptions
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+
+###
+# ADMIN: Get My Wallets
+# @name myWalletsResponseBalance
+GET {{url}}/admin/wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Get My Wallet Balances for Address
+# @name myWalletsResponseBalance
+GET {{url}}/admin/wallet/balance/{{meResponse.response.body.mainWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Switch Wallet
+GET {{url}}/admin/wallet/switch-default-wallet/id/{{myWalletsResponse.response.body.wallets[1].id}}
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# ADMIN: Fund Wallet
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{meResponse.response.body.mainWallet.walletAddress}}",
+  "network": "{{meResponse.response.body.mainWallet.network}}"
+}
+
+###
+# ADMIN: Create New Main Wallet 
+# @name createdUser
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz",
+  "network": "{{networkPT}}"
+}
+
+###
+# ADMIN: Create New Main MPC Wallet 
+# @name createdUser
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "hieu@skyfire.xyz",
+  "network": "{{networkCT}}",
+  "custodyProvider": "SKYFIRE_COINBASE_MPC",
+  "isSmartWallet": true
+}
+
+###
+# ADMIN: Get Users Paginated
+# @name usersResponse
+GET {{url}}/admin/users?page=1&size=50
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Get User Details
+# @name userDetailsResponse
+GET {{url}}/admin/users/by-email/user-29943%40skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Get User Details
+# @name userDetailsResponse
+GET {{url}}/admin/wallet/balance/email/user-29943%40skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Get Users
+GET {{url}}/admin/users/all
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

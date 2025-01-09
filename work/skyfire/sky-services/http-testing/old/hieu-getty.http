@@ -1,0 +1,86 @@
+@apiKey=ndkeaqqj56vx3x7u2pmmunyq
+@secret=Ka9ATmkPXPaNxUy4pCoU
+@gettyUrl=https://api.gettyimages.com/v3
+
+# ###
+# # Get Countries
+# GET {{gettyUrl}}/countries
+# api-key: {{apiKey}}
+# accept: application/json
+
+###
+# Access Token
+# @name accessTokenResponse
+POST https://authentication.gettyimages.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{apiKey}}&client_secret={{secret}}&grant_type=client_credentials
+
+###
+# Search
+# @name searchResponse
+GET {{gettyUrl}}/search/images/creative?phrase=turtles&fields=summary_set,download_sizes&page=1&page_size=30
+api-key: {{apiKey}}
+Authorization: Bearer {{accessTokenResponse.response.body.access_token}}
+accept: application/json
+
+# ###
+# # Download
+# # @name downloadResponse
+# POST {{gettyUrl}}/downloads/images/{{searchResponse.response.body.images[0].id}}?auto_download=false&product_type={{searchResponse.response.body.images[0].largest_downloads[0].product_type}}
+# api-key: {{apiKey}}
+# Authorization: Bearer {{accessTokenResponse.response.body.access_token}}
+
+###
+# Search Getty with Skyfire
+# @name searchSkyfireResponse
+GET {{url}}/receivers/getty-images/search/images/creative?phrase=beaches&page=1&page_size=10
+skyfire-api-key: {{hieuApiKey}}
+accept: application/json
+
+
+###
+# Download Getty with Skyfire
+# @name receiverResponse
+POST {{url}}/receivers/getty-images/images/download
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "id": "{{searchSkyfireResponse.response.body.images[0].id}}",
+    "size": "{{searchSkyfireResponse.response.body.images[0].download_sizes[1].name}}",
+    "tosConfirmation": true
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "craig@skyfire.xyz"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Get Events
+# @name eventsResponse
+GET {{url}}/events?eventNames=Claim&trackIds=0xDB6e68b43808435030840f4F7DEB460764C09cEE
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json

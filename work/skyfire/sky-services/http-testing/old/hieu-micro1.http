@@ -1,0 +1,60 @@
+@interviewName=Random Interview {{$randomInt 10001 99999}}
+
+###
+# Get Interviews
+# @name getInterviews
+GET {{proxyUrl}}/proxy/micro1/interviews
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# Reports
+# @name reports
+GET {{proxyUrl}}/proxy/micro1/interview/reports
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Interview
+# @name createInterview
+POST {{proxyUrl}}/proxy/micro1/interview
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "interview_name": "{{interviewName}}",
+    "employer_email_id": "hieu@skyfire.xyz",
+    "skills": [
+        {
+            "name": "Kindergarten Teacher",
+            "description": "Must be able to teach kids in kindergarten"
+        }
+    ],
+    "custom_questions": [
+        "Are you willing to relocate?"
+    ],
+    "interview_language": "en",
+    "can_change_interview_language": false,
+    "only_coding_round": false,
+    "is_coding_round_required": false,
+    "selected_coding_language": "python",
+    "is_proctoring_required": true
+}
+
+###
+# Invites
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/micro1/interview/invite
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "interview_id": "{{createInterview.response.body.data.interview_id}}",
+  "candidates": [
+    {
+      "name": "Hieu Ta",
+      "email": "hieu@skyfire.xyz"
+    }
+  ]
+}

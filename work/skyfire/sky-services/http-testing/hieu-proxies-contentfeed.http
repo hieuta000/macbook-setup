@@ -1,0 +1,76 @@
+###
+# Content Feed API
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/contentfeedapi/api/content/entity_types/59
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Content Feed API
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/contentfeedapi/api/content/entity_values/59
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Content Feed API
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/contentfeedapi/api/content/feed/57?format=json&date_from=2024-10-07&date_to=2024-10-07
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Content Feed Receiver 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "ContentFeed",
+  "email": "contentfeed@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 10000,
+  "basePath": "/contentfeedapi",
+  "proxyUrl": "https://contentfeedapi.machinegenerated.com/",
+  "isProxy": true,
+  "headers": {
+    "api-key": "fc9ad2a8-ae34-41d8-99c3-79324f7ec23a",
+    "secret": "0@WbO*T%KyP1nvde0LNu"
+  },
+  "freeList": [
+    "/api/content/entity_types",
+    "/api/content/entity_values"
+  ]
+}
+
+###
+# Create Content Feed Receiver 
+# @name createdUser
+PATCH {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "ContentFeed",
+  "email": "contentfeed@skyfire.xyz",
+  "cost": 10000,
+  "basePath": "/contentfeedapi",
+  "proxyUrl": "https://contentfeedapi.machinegenerated.com/",
+  "isProxy": true,
+  "headers": {
+    "api-key": "fc9ad2a8-ae34-41d8-99c3-79324f7ec23a",
+    "secret": "0@WbO*T%KyP1nvde0LNu"
+  },
+  "freeList": [
+    "/api/content/entity_types",
+    "/api/content/entity_values"
+  ]
+}
+
+###
+# ADMIN API
+# Flush Caches
+GET {{url}}/admin/users/flush-caches
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

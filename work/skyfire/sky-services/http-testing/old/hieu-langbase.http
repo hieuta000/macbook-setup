@@ -1,0 +1,14 @@
+###
+# health
+GET {{url}}/health
+
+###
+# Langbase call
+# @name langbase
+POST {{url}}/receivers/langbase/email-stock
+skyfire-api-key: {{hieuApiKey}}
+Content-Type: application/json
+
+{
+  "ticker": "AAPL"
+}

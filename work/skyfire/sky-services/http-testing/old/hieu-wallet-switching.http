@@ -1,0 +1,110 @@
+@orgName = Hieu Org {{$randomInt 20001 30000}}
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+
+
+###
+# Create Organization
+# @name orgResponse
+POST {{url}}/admin/enterprise/organizations
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "name": "{{orgName}}"
+}
+
+###
+# Create Org Wallet 1
+POST {{url}}/admin/enterprise/organizations/wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "organizationName": "{{orgResponse.response.body.name}}",
+    "walletType": "Sender"
+}
+
+###
+# Create Org Wallet 2 (Default)
+POST {{url}}/admin/enterprise/organizations/wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "organizationName": "{{orgResponse.response.body.name}}",
+    "walletType": "Sender"
+}
+
+###
+# Create Org User
+# @name addUserResponse
+POST {{url}}/enterprise/admin/users/organizationUser
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "{{newEmail}}",
+    "organizationName": "{{orgResponse.response.body.name}}",
+    "attributes": {
+        "firstName": "Hieu",
+        "lastName": "Ta",
+        "phone": "1234567890",
+        "address": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "USA",
+        "carbonArcID": "1234567890"
+    }
+}
+
+###
+# Get My Wallets
+# @name myWalletsResponse
+GET {{url}}/admin/wallet/email/{{addUserResponse.response.body.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Primary Wallet
+# @name primaryWalletResponse
+POST {{url}}/admin/wallet/primary-eth-wallet
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{addUserResponse.response.body.email}}",
+  "userType": "Sender"
+}
+
+###
+# Switch Org Wallet
+GET {{url}}/admin/enterprise/organizations/switch-default-wallet/id/74c6fc2a-6c25-4034-98ef-1c6748d64bc0
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{addUserResponse.response.body.email}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/wallet/balance
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json

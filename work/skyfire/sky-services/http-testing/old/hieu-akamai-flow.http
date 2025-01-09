@@ -1,0 +1,141 @@
+@api-funded=ec799e9d-2a43-44f6-b983-6c3e844f3034
+@api-not-funded=831405d2-9713-4007-82b6-b33a594af8e7
+
+###
+# Get
+GET http://www.botscan.net
+skyfire-api-key: {{hieuApiKey}}
+User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)
+
+###
+# Get
+GET http://www.botscan.net
+User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)
+
+
+###
+# Get WITH AKAMAI API KEY - FUNDED
+GET http://www.botscan.net
+skyfire-api-key: {{api-funded}}
+User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)
+
+###
+# Get WITH AKAMAI API KEY - NOT FUNDED
+GET http://www.botscan.net
+skyfire-api-key: {{api-not-funded}}
+User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)
+
+###
+# Get WITH BAD API KEY
+GET http://www.botscan.net
+skyfire-api-key: asdfsdaf
+User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)
+
+###
+# Create POC Receiver
+# @name receiverUser1
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "BotscanNet",
+  "email": "botscan@skyfire.xyz",
+  "userType": "Receiver",
+  "proxyUrl": "http://botscan.net",
+  "cost": 101
+}
+
+###
+# Make Payment - Bad URL
+# @name payment
+POST {{url}}/payment/url
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "url": "asfasdfasf sdf asf sd fadfa"
+}
+
+###
+# Make Payment - Good URL
+# @name payment
+POST {{url}}/payment/url
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "url": "https://www.botscan.net/foo.json"
+}
+
+###
+# Get Claim Group by Group Id
+# @name claimByGroupId
+GET {{url}}/wallet/claimGroupByGroupId/{{payment.response.headers.Skyfire-Payment-Claim-Group-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get User1: NO FUNDS Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/arnaldo@gmail.com
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Sender 2, WITH FUNDS 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "akamai-sender2@skyfire.xyz",
+  "email": "akamai-sender2@skyfire.xyz",
+  "userType": "Sender"
+}
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/akamai-sender2@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get User2 Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/akamai-sender2@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet - $100
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}",
+  "tokenAmount": "100000000"
+}
+
+###
+# Get Hieu Full Data
+# @name fullUserData
+POST {{url}}/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "akamai-sender2@skyfire.xyz"
+}

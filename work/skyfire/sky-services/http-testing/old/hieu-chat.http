@@ -1,0 +1,97 @@
+@refID={{$guid}}
+@receiverName=OpenRouter
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# Get Hieu Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# OpenRouter
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openai/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    },
+    {
+      "receiverUsername": "{{receiverName}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Search Getty with Skyfire
+# @name searchSkyfireResponse
+GET {{url}}/receivers/getty-images/search/images/creative?phrase=beaches&page=1&page_size=10
+skyfire-api-key: {{hieuApiKey}}
+accept: application/json
+
+###
+# Get Claim by ReferenceID
+# @name claimByReferenceId
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Interviews
+# @name getInterviews
+GET {{proxyUrl}}/proxy/micro1/interviews
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

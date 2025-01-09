@@ -1,0 +1,123 @@
+@refID={{$guid}}
+@receiverName=OpenRouter
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    },
+    {
+      "receiverUsername": "{{receiverName}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# Get Claim Group by Group Id
+GET {{url}}/wallet/claimGroupByGroupId/{{payment.response.headers.Skyfire-Payment-Claim-Group-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Make Payment
+# @name payment
+POST {{url}}/payment/url
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "url": "http://www.botscan.net",
+  "externalId": "{{$guid}}"
+}
+
+###
+# ENTERPRISE ADMIN: Validate Payment
+GET {{url}}/enterprise/admin/payments/validate?externalId={{payment.response.body.claimGroup.externalId}}&senderEmail=hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# ADMIN: Get Payment
+GET {{url}}/admin/payments/validate?externalId={{payment.response.body.claimGroup.externalId}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# Hold Payment
+# @name holdPayment
+POST {{url}}/payment/hold-payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    },
+    {
+      "receiverUsername": "{{receiverName}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# Get Claim Group by Group Id
+# @name claimByGroupId
+GET {{url}}/wallet/claimGroupByGroupId/{{holdPayment.response.headers.Skyfire-Payment-Claim-Group-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Execute Payment
+GET {{url}}/payment/execute-payment/{{holdPayment.response.body.claimGroup.groupId}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+

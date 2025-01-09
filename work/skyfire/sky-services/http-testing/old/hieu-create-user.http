@@ -1,0 +1,38 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+
+###
+# ADMIN API
+# Create Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}",
+  "userType": "Sender"
+}
+
+curl --request POST \
+  --url https://api-qa.skyfire.xyz/v1/admin/users \
+  --header 'content-type: application/json' \
+  --header 'skyfire-api-key: <api-key>' \
+  --data '{"email": "user-27349@skyfire.xyz","userType": "Sender"}'
+
+###
+# Create API-Key for user
+# @name newUserApiKeyResponse
+POST {{url}}/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "{{createdUser.response.body.user.email}}"
+}
+
+
+curl --request POST \
+  --url https://api-qa.skyfire.xyz/v1/admin/users/api-keys \
+  --header 'content-type: application/json' \
+  --header 'skyfire-api-key: <api-key>' \
+  --data '{"email": "user-22089@skyfire.xyz"}'

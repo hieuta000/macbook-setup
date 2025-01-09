@@ -1,0 +1,7 @@
+@apiKey=be0efa53-57ab-4956-9e4d-ddfce8d1564f
+@fnUrl=https://api.financialdatasets.ai
+
+###
+# Financial Datasets
+GET {{fnUrl}}/financials/cash-flow-statements?ticker=XOM&period=annual
+x-api-key: {{apiKey}}

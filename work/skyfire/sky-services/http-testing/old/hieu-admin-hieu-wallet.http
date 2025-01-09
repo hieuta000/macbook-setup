@@ -1,0 +1,102 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@newUserName = user-{{$randomInt 20001 30000}}
+
+###
+# health
+GET {{url}}/health
+
+###
+# Get Hieu Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet - $100
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}",
+  "tokenAmount": "100000000"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Show Claims
+# @name showClaims
+GET {{url}}/admin/wallet/claims/{{fullUserData.response.body.defaultWallet.walletAddress}}/CREATED
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Redeem Claims
+# @name redeemClaims
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{showClaims.response.body.claims[0].sourceAddress}}",
+  "destinationAddress": "{{showClaims.response.body.claims[0].destinationAddress}}",
+  "network": "{{showClaims.response.body.claims[0].network}}"
+}
+
+###
+# ADMIN: Drain Wallet
+# @name drainWalletResponse
+POST {{url}}/admin/wallet/drain
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet - $10
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}",
+  "tokenAmount": "1000000"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

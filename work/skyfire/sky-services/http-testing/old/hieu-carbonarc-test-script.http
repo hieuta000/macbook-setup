@@ -1,0 +1,183 @@
+@orgName = Hieu Org {{$randomInt 1001 5000}}
+@newEmail = hieu-{{$randomInt 20001 30000}}@skyfire.xyz
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# Create Enterprise Admin 
+# @name newEnterpriseUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "HieuEnterpriseDev-{{$randomInt 1001 5000}}@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": true, 
+  "cost": 1022,
+  "isEnterpriseAdmin": true
+}
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{newEnterpriseUser.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEnterpriseUser.response.body.user.email}}"
+}
+
+###
+# Me Response
+# @name meResponse
+GET {{url}}/users/me
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# Create API Key
+# @name enterpriseAPIkey
+POST {{url}}/users/api-keys
+Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
+content-type: application/json
+
+###
+# STEP 1. ENTERPRISE ADMIN Add Organization
+# @name newOrgResponse
+POST {{url}}/enterprise/admin/organizations
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "name": "{{orgName}}"
+}
+
+###
+# ENTERPRISE ADMIN Get Organization By Id
+GET {{url}}/enterprise/admin/organizations/id/{{newOrgResponse.response.body.id}}
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+###
+# STEP 2. ENTERPRISE ADMIN Add Wallet to Organization
+# @name newOrgWalletResponse
+POST {{url}}/enterprise/admin/organizations/wallet
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "organizationName": "{{newOrgResponse.response.body.name}}",
+    "walletType": "Sender"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by address
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/{{newOrgWalletResponse.response.body.walletAddress}} 
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# STEP 3. ENTERPRISE ADMIN Add New User
+# @name newUserResponse
+POST {{url}}/enterprise/admin/users/organizationUser
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newEmail}}",
+    "organizationName": "{{newOrgResponse.response.body.name}}",
+    "attributes": {
+        "firstName": "Alice",
+        "lastName": "Smith",
+        "phone": "1234567890",
+        "address": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "USA",
+        "carbonArcID": "1234567890"
+    }
+}
+
+###
+# STEP 4. Create API-Key for user
+# @name newUserApiKeyResponse
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+{
+    "email": "{{newUserResponse.response.body.user.email}}"
+}
+
+###
+# Get User Full Data 
+# @name createdUser
+GET {{url}}/enterprise/admin/users/organizationUser/{{newUserResponse.response.body.user.email}}
+skyfire-api-key: {{enterpriseAPIkey.response.body.apiKey}}
+content-type: application/json
+
+###
+# STEP 5 and 6. USER: Check organization wallet balance
+GET {{url}}/wallet/balance
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json
+
+###
+# STEP 7. Make Payment that EXCEEDS the wallet balance
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "{{newEnterpriseUser.response.body.user.username}}",
+      "amount": "10000000",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# STEP 7. Make Payment that DOES NOT EXCEED the wallet balance
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "{{newEnterpriseUser.response.body.user.username}}",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# STEP 8. USER: Check organization wallet balance
+GET {{url}}/wallet/balance
+skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
+content-type: application/json

@@ -1,0 +1,120 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+
+###
+# health
+GET {{url}}/health
+
+###
+# OpenRouter - OpenAI GPT-3.5 Turbo
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ],
+  "stream": false
+}
+
+###
+# Get Claim by ReferenceID
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# OpenRouter - Perplexity Model
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openrouter/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "perplexity/llama-3.1-sonar-small-128k-online",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ],
+  "stream": false
+}
+
+###
+# Get Claim by ReferenceID
+GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Perplexity
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/perplexity/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "llama-3.1-sonar-small-128k-online",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# OpenAI
+# @name receiverResponse
+POST {{proxyUrl}}/proxy/openai/v1/chat/completions
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
+    }
+  ]
+}
+
+###
+# Financial Datasets
+GET {{proxyUrl}}/proxy/financial-datasets-ai/financials/cash-flow-statements?ticker=XOM&period=annual
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# LinkedIn
+GET {{proxyUrl}}/proxy/vetric-linkedin/linkedin/v1/search/people?keywords=Hieu%20Ta
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Instagram
+GET {{proxyUrl}}/proxy/vetric-instagram/instagram/v1/users/search?q=Craig%20DeWitt
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Facebook
+POST {{proxyUrl}}/proxy/vetric-facebook/facebook/v1/search/users?typed_query=Craig%2BDeWitt&transform=true
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Facebook Marketplace
+POST {{proxyUrl}}/proxy/vetric-facebook/facebook/v1/marketplace/search?query=bicycle&filter_location_latitude=37.7749&filter_location_longitude=-122.4194
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Twitter
+GET {{proxyUrl}}/proxy/vetric-twitter/twitter/v1/search/top?query=Craig%2BDeWitt
+skyfire-api-key: {{hieuApiKey}}
+

@@ -1,0 +1,207 @@
+###
+# Create Perplexity Receiver  (IF NEEDED) 
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "Perplexity",
+  "email": "perplexity@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1001,
+  "basePath": "/perplexity",
+  "proxyUrl": "https://api.perplexity.ai/",
+  "isProxy": true,
+  "headers": {
+    "Authorization": "Bearer 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"
+  },
+  "allowList": [
+    "/chat/completions"
+  ],
+  "blockList": [
+    "/chat/completions/foo"
+  ],
+  "freeList": [
+    "/chat/bar"
+  ]
+}
+
+###
+# Perplexity - Test call
+POST {{proxyUrl}}/proxy/perplexity/chat/completions/
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "model": "llama-3.1-sonar-huge-128k-online",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Give me more insight on Jennifer Skyler in terms of how active she's been on LinkedIn in the last 3-6 months. What are the key topics being discussed by Jennifer on LinkedIn? What are her most engaging posts? And what are the high level observations about her effective engagement strategies"
+    }
+  ]
+}
+
+###
+# Skyfire AGENT: Chat
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+    "model": "gpt-4o",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Give me more insight on Jennifer Skyler in terms of how active she's been on LinkedIn in the last 3-6 months. What are the key topics being discussed by Jennifer on LinkedIn? What are her most engaging posts? And what are the high level observations about her effective engagement strategies?"
+        }
+    ]
+}
+
+###
+# Skyfire AGENT: Chat with email tool
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+  "model": "gpt-4o",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How many medals did USA got in last Olympics? Give me a breakdown"
+    },
+    {
+      "role": "assistant",
+      "content": "During the 2020 Summer Olympics held in Tokyo in 2021, the United States achieved a significant medal haul. Here is the breakdown of the medals won by Team USA:\n\n## Total Medals\n- The United States won a total of **113 medals**.\n\n## Gold Medals\n- Team USA secured **39 gold medals**, the highest number of gold medals among all participating countries.\n\n## Silver Medals\n- The U.S. won **41 silver medals**.\n\n## Bronze Medals\n- The team also earned **33 bronze medals**.\n\nKey highlights include dominance in track and field, with notable performances from athletes such as Sydney McLaughlin, Athing Mu, and Katie Ledecky, as well as successes in basketball, volleyball, and other sports."
+    },
+    {
+      "role": "user",
+      "content": "Great, now email this to me. Make sure to format this as a nice to read and professional email."
+    }
+  ],
+  "skyfire_tools": [
+    "send-email"
+  ]
+}
+
+###
+# Skyfire AGENT: Chat with stream true, content_only true
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+  "model": "gpt-4o",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How many medals did USA got in last Olympics? Give me a breakdown"
+    }
+  ],
+  "stream": true,
+  "content_only": true
+}
+
+###
+# Create API Ninja Receiver (IF NEEDED) 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "API Ninja",
+  "email": "apininja@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1005,
+  "basePath": "/api-ninja",
+  "proxyUrl": "https://api.api-ninjas.com/",
+  "isProxy": true,
+  "headers": {
+    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+  }
+}
+
+###
+# API Ninja - Test call
+GET {{proxyUrl}}/proxy/api-ninja/v1/stockprice?ticker=GOOGL
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Skyfire AGENT: Chat with multiple tools
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+  "model": "gpt-4o",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a pirate and must reply in pirate slang and style."
+    },
+    {
+      "role": "user",
+      "content": "Find 1-2 trending public company on Twitter, give me some of the tweets related to it and then provide me with the company stock price. Dont ask me for the company, search on twitter for the most trending company."
+    }
+  ],
+  "stream": true,
+  "skyfire_tools": [
+    "twitter-top-search",
+    "stock-price"
+  ],
+  "content_only": true
+}
+
+###
+# Create ZINC Receiver (IF NEEDED) 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "ZincAPI",
+  "email": "ZincAPI@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1023
+}
+
+###
+# Skyfire AGENT: Chat with shopping agent
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+  "model": "gpt-4o",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are an AI shopping assistant powered by Skyfire, offering users a seamless shopping experience. Your role is twofold assisting with both direct product purchases and brainstorming ideas for gifts or items based on the users needs. Core Functionality 1. Direct Purchase Requests When the user knows exactly what they want to buy e.g., I want to buy Doritos immediately use the Amazon product search to find the product. Skip web searches and provide Product image, Star ratings, Amazon link, Price, Title. Recommend the best option based on ratings and the users request, and offer to proceed with the purchase. 2. Brainstorming Product Ideas When the user is unsure of what to buy or asks for gift ideas, you MUST follow up by asking some clarifying questions to narrow down before providing gift ideas. Use the web search tool to search the web for ideas and present these to the user, incorporating your own local knowledge where helpful. Once the user has a clearer idea, switch to the Amazon product search to present specific options. You MUST include all follow data whenever you are showing Amazon products Product Image, Star ratings, Amazon link, Price, Title. Recommend the best product from the list, explaining why it fits their needs. 3. Purchase via Amazon if the user decides to make a purchase, use the amazon-product-place-order tool to place the order. Always confirm the shipping address including zip code, country, and phone number before placing the order. If any details are missing, ask the user to provide the necessary information. Let the user know that order processing takes 10 to 15 minutes once the order is created. Remind the user to save the request_id returned from the purchase request for future reference. This request id is the users order id and is needed to check the status of the order. 4. Check order status using the users order id, check the status of the order using the amazon-order-status tool. Important Notes Use web search tool only for brainstorming or when the user is unsure of what to buy. Use Amazon product search directly when the user requests a specific item. Confirm all shipping details before placing any orders."
+    },
+    {
+      "role": "user",
+      "content": "What is a great birthday gift to give to my dad for Christmas? Can you think of one item and show me what are the products on Amazon for it?"
+    },
+    {
+      "role": "assistant",
+      "content": "To help you with the perfect gift for your dad for Christmas, could you tell me a bit about his interests or hobbies? This will help me suggest something unique that he might love!"
+    },
+    {
+      "role": "user",
+      "content": "He like watches, can you find me some watches under 100 dollars that I can buy?"
+    }
+  ],
+  "skyfire_tools": [
+    "ai-web-search",
+    "amazon-product-search",
+    "amazon-product-place-order",
+    "amazon-order-cancel",
+    "amazon-order-status"
+  ],
+  "stream": true,
+  "content_only": true
+}

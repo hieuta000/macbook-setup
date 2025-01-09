@@ -1,0 +1,62 @@
+@email=cjft@matrix.one
+@wallet=0xe4a8c1FBAFBCCF09DdF3060e5bdD9FBc833979aE
+@reloadlyWallet=0x56FaB4c113049ba79a0B372ebe005A435C61F56D
+
+###
+# health
+GET {{url}}/health
+
+###
+# Get Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/{{email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Default Wallet Balance
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/default/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Fund Wallet - $100
+# @name fundWalletResponse
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUserData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUserData.response.body.defaultWallet.network}}",
+  "tokenAmount": "100000000"
+}
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name createdUserWalletBalance
+GET {{url}}/admin/wallet/balance/email/{{fullUserData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Show Claims
+# @name showClaims
+GET {{url}}/admin/wallet/claims/{{fullUserData.response.body.defaultWallet.walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Redeem Claims
+# @name redeemClaims
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{showClaims.response.body.claims[0].sourceAddress}}",
+  "destinationAddress": "{{showClaims.response.body.claims[0].destinationAddress}}",
+  "network": "{{showClaims.response.body.claims[0].network}}"
+}

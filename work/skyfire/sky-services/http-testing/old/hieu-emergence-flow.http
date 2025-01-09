@@ -1,0 +1,124 @@
+@amount=.00{{$randomInt 1001 5000}}
+
+###
+# Create Emergence Receiver 1
+# @name receiverUser1
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "EmergenceReceiver1",
+  "email": "em-receiver1@skyfire.xyz",
+  "userType": "Receiver",
+  "cost": 1019
+}
+
+###
+# Create Emergence Receiver 2
+# @name receiverUser2
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "EmergenceReceiver2",
+  "email": "em-receiver2@skyfire.xyz",
+  "userType": "Receiver",
+  "isInternal": true, 
+  "cost": 1021
+}
+
+###
+# Create Orchestration Sender 
+# @name senderUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "username": "EmergenceSender1",
+  "email": "em-sender1@skyfire.xyz",
+  "userType": "Sender"
+}
+
+###
+# Create API-Key for Sender
+# @name senderUserApiKey
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "em-sender1@skyfire.xyz"
+}
+
+###
+# Create API-Key for Receiver1
+# @name receiverUserApiKey
+POST {{url}}/enterprise/admin/users/api-keys
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+    "email": "em-receiver1@skyfire.xyz"
+}
+
+###
+# Payment1: User Making First Payment to EmergenceReceiver1
+# @name payment1
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "payments": [
+    {
+      "receiverUsername": "EmergenceReceiver1",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# Payment2: Emergence Orchestrator Making Payment to EmergenceReceiver2
+# @name payment2
+POST {{url}}/payment
+skyfire-api-key: {{senderUserApiKey.response.body.apiKey}}
+content-type: application/json
+
+{
+  "payments": [
+    {
+      "receiverUsername": "EmergenceReceiver2",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
+# ADMIN: Log in as Receiver to Validate Payment
+# @name receiverSessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "em-receiver1@skyfire.xyz"
+}
+
+###
+# Receiver Validate Payment
+GET {{url}}/payment/id/{{payment1.response.body.claimGroup.externalId}}
+skyfire-api-key: {{receiverUserApiKey.response.body.apiKey}}
+content-type: application/json

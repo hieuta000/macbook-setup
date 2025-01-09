@@ -1,0 +1,243 @@
+@hieuWallet=0xc0E24Eb8aF398E2d98699D386599708EE4aAEd84
+@hieuExternalWallet=0xFF924B1C6D27fD5dCe6271717acb73B254de323b
+@aidaWallet=0x45c83889BD84D5FB77039B67C30695878f506313
+@chatDestinationWallet=0x7aA161F8B72eDd5e474943c922D1e479475B9D30
+@localTreasuryWallet = 0x83A66D76979702D3dFaC2f8d3e2bA6448f36376B
+@treasuryWallet = {{localTreasuryWallet}}
+
+@networkHH = polygon_hardhat_mainnet
+@networkTestnet = polygon_testnet
+@networkHHBase = coinbase_hardhat_mainnet
+@network = {{networkHHBase}}
+
+@localUrl = http://localhost:10000
+@url = {{localUrl}}
+
+###
+# Create Wallet Sender
+# @name createdWallet
+POST {{url}}/v2/wallet
+Content-Type: application/json
+Accept: application/json
+
+{
+  "treasury": "{{treasuryWallet}}",
+  "chainAmount": "10",
+  "tokenAmount": "1000",
+  "type": "Sender",
+  "network": "{{network}}"
+}
+
+###
+# Create Wallet Receiver
+# @name createdWallet
+POST {{url}}/v2/wallet
+Content-Type: application/json
+Accept: application/json
+
+{
+  "treasury": "{{treasuryWallet}}",
+  "chainAmount": "1000",
+  "tokenAmount": "0",
+  "type": "Receiver",
+  "network": "{{network}}"
+}
+
+###
+# Balance
+GET {{url}}/v1/balance/{{network}}/{{createdWallet.response.body.wallet.address}}
+
+###
+# Get Funding Wallets
+GET {{url}}/v2/wallet?type=Funding
+
+###
+# Balance
+GET {{url}}/v1/balance/{{network}}/{{hieuWallet}}
+
+###
+# Make a transfer
+
+POST {{url}}/v1/payment
+Content-Type: application/json
+Accept: application/json
+
+{
+  "sourceAddress": "{{hieuWallet}}",
+  "destinationAddress": "{{hieuExternalWallet}}",
+  "network": "polygon_testnet",
+  "value": "1000",
+  "currency": "USDC"
+}
+
+###
+# Claims for chatGptWallet
+
+GET {{url}}/v1/account/claims/{{chatDestinationWallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Transactions for hieu
+
+GET {{url}}/v1/account/transactions/{{hieuWallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Redemptions for chatGptWallet
+
+GET {{url}}/v1/account/redemptions/{{chatDestinationWallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Make a payment to chat destination
+
+POST {{url}}/v2/payment
+Content-Type: application/json
+Accept: application/json
+
+{
+  "sourceAddress": "{{hieuWallet}}",
+  "destinationAddress": "{{chatDestinationWallet}}",
+  "network": "polygon_hardhat_mainnet",
+  "value": "100",
+  "currency": "USDC"
+}
+
+###
+# Redeem the payment
+
+POST {{url}}/v1/redemption
+Content-Type: application/json
+Accept: application/json
+
+{
+  "sourceAddress": "{{hieuWallet}}",
+  "destinationAddress": "{{chatDestinationWallet}}",
+  "network": "{{network}}"
+}
+
+###
+# Transactions for chat receiver
+
+GET {{url}}/v1/account/transactions/{{chatDestinationWallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Redemptions for chat receiver
+
+GET {{url}}/v1/account/redemptions/{{chatDestinationWallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Transactions for user
+
+GET {{url}}/v1/account/transactions/{{dev1Wallet}}
+Content-Type: application/json
+Accept: application/json
+
+###
+# Claims
+
+GET {{url}}/v1/account/claims/{{hieuWallet}}
+Content-Type: application/json
+Accept: application/json
+
+
+###
+# Balance
+
+GET {{url}}/v1/balance/{{network}}/{{aidaWallet}}
+
+###
+# Fund
+POST {{url}}/v2/wallet/{{aidaWallet}}/fund
+Content-Type: application/json
+Accept: application/json
+
+{
+  "tokenAmount": "1000",
+  "network": "polygon_testnet",
+  "currency": "USDC",
+  "treasury": "{{treasuryWallet}}"
+}
+
+###
+# Create Wallet Receiver
+# @name createdWallet
+POST {{url}}/v2/wallet
+Content-Type: application/json
+Accept: application/json
+
+{
+  "treasury": "{{treasuryWallet}}",
+  "chainAmount": ".09",
+  "tokenAmount": "0",
+  "type": "Receiver",
+  "network": "{{network}}"
+}
+
+###
+# Create Wallet Sender
+# @name createdWallet
+POST {{url}}/v2/wallet
+Content-Type: application/json
+Accept: application/json
+
+{
+  "treasury": "{{treasuryWallet}}",
+  "chainAmount": ".01",
+  "tokenAmount": "1000",
+  "type": "Sender",
+  "network": "{{network}}"
+}
+
+###
+# Balance Hieu HH
+GET {{url}}/v1/balance/polygon_hardhat_mainnet/0xc0E24Eb8aF398E2d98699D386599708EE4aAEd84
+Content-Type: application/json
+Accept: application/json
+
+###
+# Balance
+GET {{url}}/v1/balance/{{createdWallet.response.body.wallet.network}}/{{createdWallet.response.body.wallet.address}}
+
+###
+# Balance
+GET {{url}}/v1/balance/polygon_testnet/0x455d49DE42bb42EF675b6c33524E6eF22822D090
+
+###
+# Fund
+POST {{url}}/v2/wallet/0x455d49DE42bb42EF675b6c33524E6eF22822D090/fund
+Content-Type: application/json
+Accept: application/json
+
+{
+  "tokenAmount": "100000",
+  "chainAmount": ".01",
+  "network": "polygon_testnet",
+  "currency": "MATIC",
+  "treasury": "{{treasuryWallet}}"
+}
+
+###
+# Fund
+POST {{url}}/v2/wallet/0x4E2628cCa590B36ECDc51f231047D1150744f1c1/fund
+Content-Type: application/json
+Accept: application/json
+
+{
+  "chainAmount": ".01",
+  "network": "polygon_testnet",
+  "currency": "MATIC",
+  "treasury": "{{treasuryWallet}}"
+}
+
+###
+# Flush Wallet Balance
+POST {{url}}/v1/balance/{{networkCT}}/0x9F9a468A9b191444546AD44F7C106613eE4a1de6/clear
+Content-Type: application/json

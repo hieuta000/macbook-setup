@@ -1,0 +1,53 @@
+@PC_KEY=d778ff03-e893-47ac-9efc-b90dc40f7e25
+@PC_SECRET=IUEEqGz*99yLpl51Zk8V
+@pcurl=https://dataservices.pricingculture.com
+
+###
+# Daily Comps
+# @name dailyComps
+GET {{pcurl}}/api/data/dailycomps
+api-key: {{PC_KEY}}
+secret: {{PC_SECRET}}
+content-type: application/json
+
+###
+# Daily Comps Snapshot
+# @name dailyCompsSnapshot
+GET {{pcurl}}/api/data/dailycomps/snapshot?id=36&start_time=2024-06-01&end_time=2024-06-02
+api-key: {{PC_KEY}}
+secret: {{PC_SECRET}}
+content-type: application/json
+
+###
+GET https://contentfeedapi.machinegenerated.com/api/content/feed/45?report_date_from=2024-07-01&report_date_to=2024-07-31&format=json&entity=ford
+api-key: {{PC_KEY}}
+secret: {{PC_SECRET}}
+
+
+###
+# PC
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/pricing-culture/api/data/dailycomps
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# PC
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/pricing-culture/api/data/dailycomps/snapshot?id=36&start_time=2024-06-01&end_time=2024-06-02
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+
+###
+# PC
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/pc-machine-gen/api/content/feed/45?report_date_from=2024-07-01&report_date_to=2024-07-31&format=json&entity=ford
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+GET {{proxyUrl}}/proxy/contentfeedapi/api/content/feed/45?report_date_from=2024-07-01&report_date_to=2024-07-31&format=json&entity=ford
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
