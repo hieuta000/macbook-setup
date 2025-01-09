@@ -1,8 +1,3 @@
-@Linkedin=eyJzY29wZSI6InZldHJpYy5pbyIsImlhdCI6MTcyMzQ3OTA2MH0.dwikUg0b9IubZuqg8b7e5k175ZotoCgw4exgnJyMyOM
-@Facebook=eyJzY29wZSI6InZldHJpYy5pbyIsImlhdCI6MTcyMzQ3OTA3OX0.dAD_90y0pegw3s8uWlAzbtYMOtkLBeg97l_Ovx9a9gM
-@Instagram=eyJzY29wZSI6InZldHJpYy5pbyIsImlhdCI6MTcyMzQ3OTA3M30.TaYNnp8OTQ3WVmcm8Bn5we8ohWCsIBoyYafe_NzK2G4
-@Twitter=eyJzY29wZSI6InZldHJpYy5pbyIsImlhdCI6MTcyMzQ3OTA2NX0.lhKA_X5CoVLa7lw5jmOXZkfVyrb5sjeSqhLvhC8C2DU
-
 ###
 # People Search
 GET https://api.vetric.io/linkedin/v1/search/people?keywords=Craig%20DeWitt

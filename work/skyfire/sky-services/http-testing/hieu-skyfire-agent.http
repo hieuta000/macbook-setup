@@ -13,7 +13,7 @@ content-type: application/json
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
   "headers": {
-    "Authorization": "Bearer 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"
+    "Authorization": "Bearer {{perplexityApiKey}}"
   },
   "allowList": [
     "/chat/completions"

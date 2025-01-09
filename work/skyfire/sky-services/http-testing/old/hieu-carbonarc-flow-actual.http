@@ -1,7 +1,6 @@
 @orgName = Hieu Org {{$randomInt 1001 5000}}
 @newEmail = hieu-{{$randomInt 20001 30000}}@skyfire.xyz
 @amount=.00{{$randomInt 1001 5000}}
-@hieuApiKey=24333d0b-f912-4ff1-b177-a04005c7fc5c
 
 ###
 # Get Carbon Arc Full Data

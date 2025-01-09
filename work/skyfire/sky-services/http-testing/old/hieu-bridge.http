@@ -1,4 +1,3 @@
-@api-key=sk-test-9075ad3c56ca89e85444437ef17e3a41
 @bridgeUrl=https://api.sandbox.bridge.xyz
 @newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
 
