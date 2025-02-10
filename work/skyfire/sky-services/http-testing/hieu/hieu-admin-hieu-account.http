@@ -1,0 +1,31 @@
+###
+# health
+GET {{url}}/health
+
+###
+# Get Hieu Full Data
+# @name fullUser
+GET {{url}}/admin/users/by-email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Get Wallet Balance by email
+# @name walletBalance
+GET {{url}}/admin/wallet/balance/email/hieu@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Fund Wallet
+POST {{url}}/admin/wallet/fund
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "destinationAddress": "{{fullUser.response.body.defaultWallet.walletAddress}}",
+  "network": "{{fullUser.response.body.defaultWallet.network}}",
+  "tokenAmount": "10"
+}

@@ -23,7 +23,6 @@ content-type: application/json
   "username": "API Ninja",
   "email": "apininja@skyfire.xyz",
   "userType": "Receiver",
-  "isInternal": false, 
   "cost": 1005,
   "basePath": "/api-ninja",
   "proxyUrl": "https://api.api-ninjas.com/",
@@ -45,13 +44,12 @@ content-type: application/json
   "username": "Perplexity",
   "email": "perplexity@skyfire.xyz",
   "userType": "Receiver",
-  "isInternal": false, 
   "cost": 1001,
   "basePath": "/perplexity",
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
   "headers": {
-    "Authorization": "Bearer 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"
+    "Authorization": "Bearer {{$dotenv PERPLEXITY_API_KEY}}"
   },
   "allowList": [
     "/chat/completions"
@@ -77,7 +75,7 @@ content-type: application/json
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
   "headers": {
-    "Authorization": "Bearer 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"
+    "Authorization": "Bearer {{$dotenv PERPLEXITY_API_KEY}}"
   },
   "allowList": [
     "/chat/completions"
@@ -98,7 +96,7 @@ skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 
 {
-  "model": "llama-3.1-sonar-small-128k-online",
+  "model": "sonar-reasoning",
   "messages": [
     {
       "role": "user",
@@ -128,7 +126,7 @@ content-type: application/json
   "proxyUrl": "https://api.api-ninjas.com/",
   "isProxy": true,
   "headers": {
-    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+    "x-api-key": "{{$dotenv API_NINJA_API_KEY}}"
   }
 }
 
@@ -146,7 +144,7 @@ content-type: application/json
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
   "headers": {
-    "Authorization": "Bearer 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"
+    "Authorization": "Bearer {{$dotenv PERPLEXITY_API_KEY}}"
   },
   "allowList": [
     "/chat/completions"

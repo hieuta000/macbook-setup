@@ -4,7 +4,7 @@
 
 
 ###
-# Create ChatGPT Receiver, coin amount should 
+# Create Receiver 
 # @name createdUser1
 POST {{url}}/admin/users
 skyfire-api-key: {{hieuApiKey}}
@@ -19,7 +19,7 @@ content-type: application/json
 }
 
 ###
-# Create ChatGPT Receiver, coin amount should 
+# Create Receiver 
 # @name createdUser2
 POST {{url}}/admin/users
 skyfire-api-key: {{hieuApiKey}}

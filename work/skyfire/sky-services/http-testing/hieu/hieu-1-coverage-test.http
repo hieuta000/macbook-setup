@@ -126,7 +126,7 @@ content-type: application/json
 # Make Payment
 # @name payment
 POST {{url}}/payment
-skyfire-api-key: {{hieuApiKey}}
+skyfire-api-key: {{apikey.response.body.apiKey}}
 content-type: application/json
 
 {
@@ -134,6 +134,15 @@ content-type: application/json
   "payments": [
     {
       "receiverUsername": "OpenAI",
+      "amount": "{{amount}}",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    },
+    {
+      "receiverUsername": "OpenRouter",
       "amount": "{{amount}}",
       "data": {
         "foo": "1234",
@@ -160,15 +169,14 @@ content-type: application/json
 
 {
   "username": "API Ninja",
-  "userType": "Receiver",
   "email": "apininja@skyfire.xyz",
+  "userType": "Receiver",
   "cost": 1005,
   "basePath": "/api-ninja",
   "proxyUrl": "https://api.api-ninjas.com/",
   "isProxy": true,
-  "isInternal": false, 
   "headers": {
-    "x-api-key": "QFNL5gV/cZ3iix87FI+/Dw==xa6urt3xiacQ5Z9W"
+    "x-api-key": "{{$dotenv API_NINJA_API_KEY}}"
   }
 }
 
@@ -189,14 +197,13 @@ content-type: application/json
 {
   "username": "Perplexity",
   "email": "perplexity@skyfire.xyz",
-  "userType": "Receiver",
   "cost": 1001,
+  "userType": "Receiver",
   "basePath": "/perplexity",
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
-  "isInternal": false, 
   "headers": {
-    "Authorization": "Bearer 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"
+    "Authorization": "Bearer {{$dotenv PERPLEXITY_API_KEY}}"
   },
   "allowList": [
     "/chat/completions"
@@ -217,7 +224,7 @@ skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 
 {
-  "model": "llama-3.1-sonar-small-128k-online",
+  "model": "sonar-reasoning",
   "messages": [
     {
       "role": "user",

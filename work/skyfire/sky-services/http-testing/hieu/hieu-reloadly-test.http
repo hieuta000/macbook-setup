@@ -1,116 +1,108 @@
-###
-# Country Info
-# @name giftCardResponse
-GET {{url}}/receivers/reloadly/countries
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
+@apiClientIdSandbox={{$dotenv RELOADLY_API_CLIENT_ID_SANDBOX}}
+@apiSecretSandbox={{$dotenv RELOADLY_API_SECRET_SANDBOX}}
+@apiClientIdProd={{$dotenv RELOADLY_API_CLIENT_ID_PROD}}
+@apiSecretProd={{$dotenv RELOADLY_API_SECRET_PROD}}
+@reloadlyUrlSandbox={{$dotenv RELOADLY_URL_SANDBOX}}
+@reloadlyUrlProd={{$dotenv RELAODLY_URL_PROD}}
+@apiClientId={{apiClientIdProd}}
+@apiSecret={{apiSecretProd}}
+@reloadlyUrl={{reloadlyUrlProd}}
+# @apiClientId={{apiClientIdSandbox}}
+# @apiSecret={{apiSecretSandbox}}
+# @reloadlyUrl={{reloadlyUrlSandbox}}
 
 ###
-# Product Info
-# @name giftCardResponse
-GET {{url}}/receivers/reloadly/product-info/amazon
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-###
-# Product Info
-# @name giftCardResponse
-GET {{url}}/receivers/reloadly/product-info/country/us
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-###
-# Gift Card
-# @name giftCardResponse
-POST {{url}}/receivers/reloadly/gift-card
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
+# Get access token
+# @name accessToken
+POST https://auth.reloadly.com/oauth/token 
+Content-Type: application/json
 
 {
-  "recipientEmail": "hieu@skyfire.xyz",
+  "client_id": "{{apiClientId}}",
+  "client_secret": "{{apiSecret}}",
+  "grant_type": "client_credentials",
+  "audience": "{{reloadlyUrl}}"
+}
+
+###
+# Countries
+# @name countries
+GET {{reloadlyUrl}}/countries
+Authorization: Bearer {{accessToken.response.body.access_token}}
+Content-Type: application/json
+
+###
+# Products By Country
+GET {{reloadlyUrl}}/countries/US/products
+Accept: application/com.reloadly.giftcards-v1+json
+Authorization: Bearer {{accessToken.response.body.access_token}}
+
+###
+# Purchase Gift Card
+# @name purchaseGiftCard
+POST {{reloadlyUrl}}/orders
+Authorization: Bearer {{accessToken.response.body.access_token}}
+Content-Type: application/json
+
+{
   "productId": 5,
+  "unitPrice": 1,
   "countryCode": "US",
-  "note": "Hi Hieu, US Card",
-  "amount": 1,
-  "sendEmail": false
+  "quantity": 1,
+  "customIdentifier": "{{$guid}}"
 }
 
 ###
-# Gift Card
-# @name giftCardResponse
+# Purchase Gift Card
+# @name purchaseGiftCard
+POST {{reloadlyUrl}}/orders
+Authorization: Bearer {{accessToken.response.body.access_token}}
+Content-Type: application/json
+
+{
+  "productId": 5,
+  "unitPrice": 1,
+  "countryCode": "US",
+  "quantity": 1,
+  "customIdentifier": "{{$guid}}"
+}
+
+###
+# Get Redeem Instructions
+GET {{reloadlyUrl}}/brands/{{purchaseGiftCard.response.body.product.brand.brandId}}/redeem-instructions
+Authorization: Bearer {{accessToken.response.body.access_token}}
+Content-Type: application/json
+
+###
+# Get Redeem Code
+GET {{reloadlyUrl}}/orders/transactions/761328/cards
+Authorization: Bearer {{accessToken.response.body.access_token}}
+Content-Type: application/json
+
+###
+# Products
+GET {{reloadlyUrl}}/products?size=1000&page=1&productName=amazon&includeRange=true&includeFixed=true
+Accept: application/com.reloadly.giftcards-v1+json
+Authorization: Bearer {{accessToken.response.body.access_token}}
+
+### Test Skyfire APIs
+
+###
+# Purchase Gift Card
+# @name purchaseGiftCard
 POST {{url}}/receivers/reloadly/gift-card
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 
 {
   "recipientEmail": "hieu@skyfire.xyz",
-  "productId": 18271,
-  "countryCode": "NL",
-  "note": "Hi Hieu, NL Card",
-  "amount": 2,
-  "sendEmail": true
+  "countryCode": "US",
+  "amount": 1
 }
 
 ###
-# Get Claim by ReferenceID
-# @name claimByReferenceId
-GET {{url}}/wallet/claimByReferenceId/{{giftCardResponse.response.headers.Skyfire-Payment-Reference-ID}}
+# Purchase Gift Card
+# @name purchaseGiftCard
+GET {{url}}/receivers/reloadly/redeem-code/761536
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
-
-###
-# Email Dump
-POST {{url}}/receivers/api-toolkit/send-email
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-{
-  "recipientEmail": "hieu@skyfire.xyz",
-  "emailData": {
-    "transactionId": "8207030759",
-    "amount": 5.955,
-    "discount": 0.05,
-    "currencyCode": "USD",
-    "fee": 1,
-    "smsFee": 0,
-    "totalFee": 1,
-    "preOrdered": false,
-    "recipientEmail": "hieu@skyfire.xyz",
-    "customerIdentifier": "b2f86ba1-95b2-4572-b6a0-c880180881c5",
-    "status": "SUCCESSFUL",
-    "transactionCreatedTime": "2024-08-04T02:01:00.766Z",
-    "product": {
-      "productId": 5,
-      "countryCode": "US",
-      "productName": "Amazon",
-      "quantity": 1,
-      "unitPrice": 5,
-      "totalPrice": 5,
-      "currencyCode": "USD",
-      "brand": {
-        "brandId": 2,
-        "brandName": "Amazon"
-      }
-    }
-  }
-}
-
-###
-# Get Claim by ReferenceID
-# @name claimByReferenceId
-GET {{url}}/wallet/claimByReferenceId/{{giftCardResponse.response.headers.Skyfire-Payment-Reference-ID}}
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-
-###
-# ADMIN: Redeem
-POST {{url}}/admin/wallet/redeem
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-{
-  "sourceAddress": "{{claimByReferenceId.response.body.sourceAddress}}",
-  "destinationAddress": "{{claimByReferenceId.response.body.destinationAddress}}",
-  "network": "{{claimByReferenceId.response.body.network}}"
-}

@@ -1,8 +1,5 @@
-<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-pricing-culture.http
-=======
 @PC_KEY={{$dotenv PRICING_CULTURE_API_KEY}}
-@PC_SECRET={{$dotenv PRICING_CULTURE_API_SECRET}}
->>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-pricing-culture.http
+@PC_SECRET={{$dotenv PRICE_CULTURE_API_SECRET}}
 @pcurl=https://dataservices.pricingculture.com
 
 ###
@@ -22,10 +19,14 @@ secret: {{PC_SECRET}}
 content-type: application/json
 
 ###
-GET https://contentfeedapi.machinegenerated.com/api/content/feed/45?report_date_from=2024-07-01&report_date_to=2024-07-31&format=json&entity=ford
+GET https://contentfeedapi.machinegenerated.com/api/content/feed/49?report_date_from=2024-08-01&report_date_to=2024-08-31&format=json&entity=mcdonald%27s
 api-key: {{PC_KEY}}
 secret: {{PC_SECRET}}
 
+###
+POST https://contentfeedapi.machinegenerated.com/api/content/feed
+api-key: {{PC_KEY}}
+secret: {{PC_SECRET}}
 
 ###
 # PC
@@ -51,6 +52,8 @@ skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 
 ###
-GET {{proxyUrl}}/proxy/contentfeedapi/api/content/feed/45?report_date_from=2024-07-01&report_date_to=2024-07-31&format=json&entity=ford
+# PC
+# @name receiverResponse
+GET {{proxyUrl}}/proxy/pc-machine-gen/api/content/feed/49?report_date_from=2024-08-01&report_date_to=2024-08-31&format=json&entity=mcdonald%27s
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json

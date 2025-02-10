@@ -1,0 +1,37 @@
+@email=jan@wilmake.com
+@userIdReceiver=c01c94bb-c5ae-4068-8436-c20b2de69fde
+@userIdSender=0f02a6a3-ce3a-468d-9d71-b37e52d06307
+
+
+
+###
+# health
+GET {{url}}/health
+
+###
+# Get Hieu Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-email/{{email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Hieu Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-uuid/{{userIdSender}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get Hieu Full Data
+# @name createdUser
+GET {{url}}/admin/users/by-uuid/{{userIdReceiver}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Delete User
+DELETE  {{url}}/admin/users/{{userIdReceiver}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
