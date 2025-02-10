@@ -1,0 +1,15 @@
+@vetr
+###
+# People Search
+GET https://api.vetric.io/linkedin/v1/search/people?keywords=Craig%20DeWitt
+x-api-key: {{$dotenv VETRIC_LINKEDIN_API_KEY}}
+
+###
+# Instagram Search
+GET https://api.vetric.io/instagram/v1/users/search?q=Craig%20DeWitt
+x-api-key: {{$dotenv VETRIC_INSTAGRAM_API_KEY}}
+
+###
+# Facebook Search
+POST https://api.vetric.io/facebook/v1/search/users?typed_query=Craig%20DeWitt&transform=true
+x-api-key: {{$dotenv VETRIC_FACEBOOK_API_KEY}}

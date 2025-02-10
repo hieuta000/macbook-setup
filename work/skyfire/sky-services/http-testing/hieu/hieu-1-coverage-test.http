@@ -24,6 +24,13 @@ Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
 content-type: application/json
 
 ###
+# Delete User
+# @name deletedUser
+DELETE {{url}}/admin/users/{{meResponse.response.body.id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
 # Create Main Wallet
 POST {{url}}/users/main-wallet
 Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}

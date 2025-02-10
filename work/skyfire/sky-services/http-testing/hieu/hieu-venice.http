@@ -1,3 +1,7 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-venice.http
+=======
+@apiKey={{$dotenv VENICE_AI_API_KEY}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-venice.http
 @veniceUrl=https://api.venice.ai
 
 ###

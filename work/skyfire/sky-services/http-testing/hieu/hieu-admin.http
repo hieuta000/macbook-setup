@@ -10,6 +10,16 @@ GET {{url}}/health
 # @name transferResponse
 POST {{url}}/admin/wallet/transfer
 
+###
+# ADMIN Impersonate Session
+# @name sessionTokenResponse
+POST {{url}}/admin/users/create-session
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{newEmail}}"
+}
 
 ###
 # Get Hieu Full Data
@@ -140,10 +150,18 @@ content-type: application/json
   "tokenAmount": "10"
 }
 
+
+
+###
+# Get User Full Data
+# @name fullUserData
+GET {{url}}/admin/users/by-email/taylor.casselman@carbonarc.co
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
 ###
 # Get Receiver
-# @name receiverUser
-DELETE {{url}}/admin/users/f6a4bbee-a659-4723-911c-e56cb593e8fc
+DELETE {{url}}/admin/users/549842c0-13f7-4978-96c9-54afaecb54c4
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 

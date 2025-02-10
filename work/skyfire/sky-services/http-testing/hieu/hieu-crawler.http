@@ -18,6 +18,13 @@ content-type: application/json
 }
 
 ###
+# Get User Full Data 
+# @name fullUserData
+GET {{url}}/admin/users/by-email/crawler-ai-sender@skyfire.xyz
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
 # ADMIN API
 # Get Wallet Balance by email
 # @name createdUserWalletBalance

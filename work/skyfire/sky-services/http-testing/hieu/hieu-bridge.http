@@ -1,3 +1,7 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-bridge.http
+=======
+@api-key={{$dotenv BRIDGE_API_KEY}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-bridge.http
 @bridgeUrl=https://api.sandbox.bridge.xyz
 @newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
 

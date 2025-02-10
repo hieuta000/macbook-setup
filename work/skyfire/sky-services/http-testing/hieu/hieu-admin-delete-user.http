@@ -1,0 +1,59 @@
+@newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+@walletAddress=0xbdFab259229e361B0F187aA38B56b9E84162b67B
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN API
+# Flush Caches
+GET {{url}}/admin/users/flush-caches
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get User Full Data By Email
+# @name userFullData
+GET {{url}}/admin/users/by-email/{{newEmail}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get User Full Data By Wallet Address
+# @name userFullData
+GET {{url}}/admin/users/by-wallet/{{walletAddress}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/admin/wallet/balance/email/{{userFullData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Claims
+GET {{url}}/admin/wallet/claims/email/{{userFullData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN API
+# Drain Wallet
+POST {{url}}/admin/wallet/drain
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{userFullData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{userFullData.response.body.defaultWallet.network}}"
+}
+
+###
+# Delete User
+# @name deletedUser
+DELETE {{url}}/admin/users/{{userFullData.response.body.user.id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

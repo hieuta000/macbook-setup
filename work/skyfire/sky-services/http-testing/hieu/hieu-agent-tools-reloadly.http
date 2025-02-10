@@ -1,0 +1,86 @@
+###
+# Get all tool
+GET {{url}}/admin/agent/tools
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Get tool
+GET {{url}}/admin/agent/tools/gift-card
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Create Tool
+POST {{url}}/admin/agent/tools
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "name": "gift-card",
+  "description": "This tool allows you to send a gift card to someone via email. The recipient will receive an email with the gift card details and instructions on how to redeem it. ",
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "recipientEmail": {
+        "type": "string",
+        "description": "The email address of the recipient who will receive the gift card."
+      },
+      "countryCode": {
+        "type": "string",
+        "description": "Optional field. If not provided, use 'US'.  The country code of the recipient. e.g. US for United States."
+      },
+      "amount": {
+        "type": "number",
+        "description": "Optional field. If not provided, use 5. The amount of the gift card in the currency specified."
+      },
+      "note": {
+        "type": "string",
+        "description": "Optional field. If not provided, use 'Enjoy your gift card!'. A note to include with the gift card."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "recipientEmail",
+      "countryCode",
+      "amount",
+      "note"
+    ]
+  },
+  "callConfig": {
+    "type": "Controller",
+    "className": "ReloadlyController",
+    "methodName": "giftCardOrder"
+  }
+}
+
+###
+# Delete Tool
+DELETE {{url}}/admin/agent/tools/gift-card
+skyfire-api-key: {{hieuApiKey}}
+
+###
+# Skyfire AGENT: Chat with email tool
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+  "model": "gpt-4o",
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Use default values if not provided. Return the cost of the gift card from the amount field in the response."
+    },
+    {
+      "role": "user",
+      "content": "Send a gift card to hieu@skyfire.xyz in the amount of $1. Include the note 'Hieu thinks you're awesome!'"
+    },
+    {
+      "role": "user",
+      "content": "Great, now email this to me. Make sure to format this as a nice to read and professional email."
+    }
+  ],
+  "skyfire_tools": [
+    "gift-card",
+    "send-email"
+  ]
+}

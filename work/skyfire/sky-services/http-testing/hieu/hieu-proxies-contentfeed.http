@@ -35,8 +35,8 @@ content-type: application/json
   "proxyUrl": "https://contentfeedapi.machinegenerated.com/",
   "isProxy": true,
   "headers": {
-    "api-key": "fc9ad2a8-ae34-41d8-99c3-79324f7ec23a",
-    "secret": "0@WbO*T%KyP1nvde0LNu"
+    "api-key": "{{$dotenv CONTENT_FEED_API_KEY}}",
+    "secret": "{{$dotenv CONTENT_FEED_SECRET}}"
   },
   "freeList": [
     "/api/content/entity_types",
@@ -45,7 +45,7 @@ content-type: application/json
 }
 
 ###
-# Create Content Feed Receiver 
+# Patch Content Feed Receiver 
 # @name createdUser
 PATCH {{url}}/admin/users
 skyfire-api-key: {{hieuApiKey}}
@@ -59,8 +59,8 @@ content-type: application/json
   "proxyUrl": "https://contentfeedapi.machinegenerated.com/",
   "isProxy": true,
   "headers": {
-    "api-key": "fc9ad2a8-ae34-41d8-99c3-79324f7ec23a",
-    "secret": "0@WbO*T%KyP1nvde0LNu"
+    "api-key": "{{$dotenv CONTENT_FEED_API_KEY}}",
+    "secret": "{{$dotenv CONTENT_FEED_SECRET}}"
   },
   "freeList": [
     "/api/content/entity_types",

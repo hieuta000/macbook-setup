@@ -1,7 +1,10 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-treasury.http
 @localUrl=http://localhost:3000
 @url={{localUrl}}/v1
 @proxyUrl={{localUrl}}
 
+=======
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-treasury.http
 ###
 # health
 GET {{url}}/health
@@ -100,17 +103,6 @@ content-type: application/json
 GET {{url}}/wallet/claimByReferenceId/{{receiverResponse.response.headers.Skyfire-Payment-Reference-ID}}
 skyfire-api-key: {{apikey.response.body.apiKey}}
 content-type: application/json
-
-###
-# Admin Redeem
-POST {{url}}/admin/wallet/redeem
-skyfire-api-key: {{hieuApiKey}}
-content-type: application/json
-
-{
-  "sourceAddress": "0xb20A37c6Cb900ede26EFbBc20F21247AdFB714F6",
-  "destinationAddress": "{{openRouterWallet}}"
-}
 
 ###
 # Check claims

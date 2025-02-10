@@ -13,7 +13,11 @@ content-type: application/json
   "proxyUrl": "https://api.perplexity.ai/",
   "isProxy": true,
   "headers": {
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/hieu-skyfire-agent.http
     "Authorization": "Bearer {{perplexityApiKey}}"
+=======
+    "Authorization": "Bearer {{$dotenv PERPLEXITY_API_KEY}}"
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-skyfire-agent.http
   },
   "allowList": [
     "/chat/completions"
@@ -44,6 +48,7 @@ content-type: application/json
 
 ###
 # Skyfire AGENT: Chat
+# All agents can use all tools, tools are determined by what is passed into the call.
 POST {{url}}/agent/chat/completions
 Content-Type: application/json
 skyfire-api-key: {{hieuApiKey}}
@@ -53,7 +58,53 @@ skyfire-api-key: {{hieuApiKey}}
     "messages": [
         {
             "role": "user",
-            "content": "Give me more insight on Jennifer Skyler in terms of how active she's been on LinkedIn in the last 3-6 months. What are the key topics being discussed by Jennifer on LinkedIn? What are her most engaging posts? And what are the high level observations about her effective engagement strategies?"
+            "content": "How many Olympic medals by country in 2024?"
+        }
+    ],
+    "skyfire_tools": [
+      "ai-web-search",
+      "send-email"
+    ]
+}
+
+###
+# Skyfire AGENT: Shopping Agent V1
+POST {{url}}/agent/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+    "model": "gpt-4o",
+    "messages": [
+        { "role": "system",
+          "content": "All createdAt formats should be in MM/DD/YYYY format."
+        }, 
+        {
+            "role": "user",
+            "content": "How me gift ideas under $25?"
+        }
+    ],
+    "skyfire_tools": [
+      "ai-web-search",
+      "product-search",
+      "product-purchase",
+      "product-ideas",
+      "send-email"
+    ]
+}
+
+###
+# Skyfire AGENT: Shopping Agent V2
+POST {{url}}/agent-shopping/chat/completions
+Content-Type: application/json
+skyfire-api-key: {{hieuApiKey}}
+    
+{
+    "model": "gpt-4o",
+    "messages": [
+        {
+            "role": "user",
+            "content": "How me gift ideas under $25?"
         }
     ]
 }

@@ -7,6 +7,28 @@
 GET {{url}}/health
 
 ###
+# Make Payment: 402
+# @name payment
+POST {{url}}/payment
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "externalId": "{{$guid}}",
+  "payments": [
+    {
+      "receiverUsername": "OpenAI",
+      "amount": "1000",
+      "data": {
+        "foo": "1234",
+        "bar": "5678",
+        "baz": "91011"
+      }
+    }
+  ]
+}
+
+###
 # Make Payment
 # @name payment
 POST {{url}}/payment

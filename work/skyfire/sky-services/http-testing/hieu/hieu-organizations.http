@@ -1,36 +1,42 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-organizations.http
 @email = dev1@skyfire.xyz
 @orgName = Dev1 Org {{$randomInt 20001 30000}}
 @newEmail = user-{{$randomInt 20001 30000}}@skyfire.xyz
+=======
+@orgName = EA Org {{$randomInt 20001 30000}}
+@newEmail = ea-user-{{$randomInt 20001 30000}}@skyfire.xyz
+@newEnterpriseAdminEmail = ea-{{$randomInt 20001 30000}}@skyfire.xyz
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-organizations.http
 
 ###
-# ADMIN Impersonate Session
-# @name sessionTokenResponse
-POST {{url}}/admin/users/create-session
+# Create Enterprise Admin 
+# @name eaUser
+POST {{url}}/admin/users
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
 
 {
-  "email": "hieu@skyfire.xyz"
+  "email": "{{newEnterpriseAdminEmail}}",
+  "userType": "Sender",
+  "isEnterpriseAdmin": true
 }
 
 ###
-# ADMIN Me Response
-# @name meResponse
-GET {{url}}/users/me
-Authorization: Bearer {{sessionTokenResponse.response.body.sessionToken}}
-content-type: application/json
-
-###
-# ADMIN Get User By Email
-GET {{url}}/admin/users/by-email/hieu@skyfire.xyz
+# Create API-Key for user
+# @name eaApiKey
+POST {{url}}/admin/users/api-keys
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
+
+{
+    "email": "{{eaUser.response.body.user.email}}"
+}
 
 ###
 # ENTERPRISE ADMIN Add Organization
 # @name orgResponse
-POST {{url}}/admin/enterprise/organizations
-skyfire-api-key: {{apiKey}}
+POST {{url}}/enterprise/admin/organizations
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 {
@@ -40,22 +46,15 @@ content-type: application/json
 ###
 # ENTERPRISE ADMIN Get Organizations
 # @name getOrgResponse
-GET {{url}}/admin/enterprise/organizations
-skyfire-api-key: {{apiKey}}
-content-type: application/json
-
-###
-# ENTERPRISE ADMIN Get Organizations
-# @name getOrgResponse
-GET {{url}}/admin/enterprise/organizations/id/{{orgResponse.response.body.id}}
-skyfire-api-key: {{apiKey}}
+GET {{url}}/enterprise/admin/organizations
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 ###
 # ENTERPRISE ADMIN Add New User 3X
 # @name addUserResponse
 POST {{url}}/enterprise/admin/users/organizationUser
-skyfire-api-key: {{apiKey}}
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 {
@@ -76,8 +75,8 @@ content-type: application/json
 
 ###
 # ENTERPRISE ADMIN Add Wallet to Organization 2X
-POST {{url}}/admin/enterprise/organizations/wallet
-skyfire-api-key: {{apiKey}}
+POST {{url}}/enterprise/admin/organizations/wallet
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 {
@@ -89,21 +88,20 @@ content-type: application/json
 ###
 # ENTERPRISE ADMIN Get Organizations
 # @name getOrgResponse
-GET {{url}}/admin/enterprise/organizations/id/{{orgResponse.response.body.id}}
-skyfire-api-key: {{apiKey}}
+GET {{url}}/enterprise/admin/organizations/id/{{orgResponse.response.body.id}}
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 ###
 # ENTERPRISE ADMIN Get User
 # @name getUserResponse
-GET {{url}}/enterprise/admin/users/organizationUser/{{addUserResponse.response.body.email}}
-skyfire-api-key: {{apiKey}}
+GET {{url}}/enterprise/admin/users/organizationUser/{{addUserResponse.response.body.user.email}}
+skyfire-api-key: {{eaApiKey.response.body.apiKey}}
 content-type: application/json
 
 ###
-# ENTERPRISE ADMIN Delete Organization with Admin Key
-DELETE {{url}}/admin/organizations/id/{{orgResponse.response.body.id}}
+# Delete User
+# @name deletedUser
+DELETE {{url}}/admin/users/{{eaUser.response.body.user.id}}
 skyfire-api-key: {{hieuApiKey}}
 content-type: application/json
-
-###

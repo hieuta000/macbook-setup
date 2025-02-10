@@ -1,3 +1,8 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-getty.http
+=======
+@apiKey={{$dotenv GETTY_IMAGES_API_KEY}}
+@secret={{$dotenv GETTY_IMAGES_API_SECRET}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-getty.http
 @gettyUrl=https://api.gettyimages.com/v3
 
 # ###

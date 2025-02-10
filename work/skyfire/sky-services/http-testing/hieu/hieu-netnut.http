@@ -1,5 +1,12 @@
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-netnut.http
 @netnutUrl=https://proxy-api.netnut.io
 @netnutUser=hieuta
+=======
+@apiKey={{$dotenv NETNUT_API_KEY}}
+@netnutUrl=https://proxy-api.netnut.io
+@netnutUser={{$dotenv NETNUT_PROXY_USER}}
+@netnutKey={{$dotenv NETNUT_PROXY_PASSWORD}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-netnut.http
 
 ###
 # Proxy Login

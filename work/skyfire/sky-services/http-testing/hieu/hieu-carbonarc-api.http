@@ -1,4 +1,8 @@
 @clientId=skyfire
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-carbonarc-api.http
+=======
+@carbonarcApiKey={{$dotenv CARBONARC_API_KEY}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-carbonarc-api.http
 @carbonArcUrl=https://api.carbonarc.co/v1
 
 ###

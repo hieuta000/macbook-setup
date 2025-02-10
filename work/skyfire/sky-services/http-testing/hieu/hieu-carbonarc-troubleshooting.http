@@ -71,9 +71,3 @@ content-type: application/json
     }
   ]
 }
-
-###
-# STEP 8. USER: Check organization wallet balance
-GET {{url}}/wallet/balance
-skyfire-api-key: {{newUserApiKeyResponse.response.body.apiKey}}
-content-type: application/json

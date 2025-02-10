@@ -1,0 +1,77 @@
+@email=dev1@skyfire.xyz
+
+###
+# health
+GET {{url}}/health
+
+###
+# ADMIN API
+# Flush Caches
+GET {{url}}/admin/users/flush-caches
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Create Sender 
+# @name createdUser
+POST {{url}}/admin/users
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "email": "{{email}}",
+  "userType": "Sender",
+  "isEnterpriseAdmin": true
+}
+
+###
+# Get User Full Data By Email
+# @name userFullData
+GET {{url}}/admin/users/by-email/{{email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# Get My Balance
+# @name myWalletsResponse
+GET {{url}}/admin/wallet/balance/email/{{userFullData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Claims
+# @name claims
+GET {{url}}/admin/wallet/claims/email/{{userFullData.response.body.user.email}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+###
+# ADMIN: Redeem
+POST {{url}}/admin/wallet/redeem
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{claims.response.body.claims[1].sourceAddress}}",
+  "destinationAddress": "{{claims.response.body.claims[1].destinationAddress}}",
+  "network": "{{claims.response.body.claims[1].network}}"
+}
+
+###
+# ADMIN API
+# Drain Wallet
+POST {{url}}/admin/wallet/drain
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json
+
+{
+  "sourceAddress": "{{userFullData.response.body.defaultWallet.walletAddress}}",
+  "network": "{{userFullData.response.body.defaultWallet.network}}"
+}
+
+###
+# Delete User
+# @name deletedUser
+DELETE {{url}}/admin/users/{{userFullData.response.body.user.id}}
+skyfire-api-key: {{hieuApiKey}}
+content-type: application/json

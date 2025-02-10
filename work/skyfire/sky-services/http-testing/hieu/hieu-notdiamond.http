@@ -1,4 +1,8 @@
 @notDiamondBaseUrl=https://api.notdiamond.ai
+<<<<<<< HEAD:work/skyfire/sky-services/http-testing/old/hieu-notdiamond.http
+=======
+@notDiamondApiKey={{$dotenv NOT_DIAMOND_API_KEY}}
+>>>>>>> 63e849c (updated):work/skyfire/sky-services/http-testing/hieu/hieu-notdiamond.http
 
 ###
 # Get Route
