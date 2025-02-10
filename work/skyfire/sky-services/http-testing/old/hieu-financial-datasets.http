@@ -1,6 +1,0 @@
-@fnUrl=https://api.financialdatasets.ai
-
-###
-# Financial Datasets
-GET {{fnUrl}}/financials/cash-flow-statements?ticker=XOM&period=annual
-x-api-key: {{apiKey}}
