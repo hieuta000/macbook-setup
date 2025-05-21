@@ -33,6 +33,7 @@ alias cp='cp -v'
 alias ll='ls -al'
 alias du='du -h -d1 .'
 alias grep='grep --exclude-dir=node_modules'
+alias less='less -R'
 
 alias be='cd $WORK_DIR/sky-services'
 alias we='cd $WORK_DIR/web7'
