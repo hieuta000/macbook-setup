@@ -92,24 +92,5 @@ alias yibt='yi;yb;yt;yl'
 alias yitb='yibt'
 alias yib='yi;yb'
 
-alias demo-1='ssh -i .ssh/id_rsa hieuta@34.66.15.83'
-alias sandbox-1='ssh -i .ssh/id_rsa hieuta@35.194.28.196'
-
 alias tdump='sudo tcpdump -i any -A port'
 alias sqldump='sudo tcpdump -i lo0 -s 0 -l -w - dst port 54322'
-
-alias tnewbe='tmux new -s be'
-alias tnewma='tmux new -s ma'
-alias tnewwe='tmux new -s we'
-alias tnewda='tmux new -s da'
-alias tnewfe='tmux new -s fe'
-alias tnewco='tmux new -s co'
-
-alias tls='tmux ls'
-alias tbe='tmux a -t be'
-alias tma='tmux a -t ma'
-alias twe='tmux a -t we'
-alias tda='tmux a -t da'
-alias tfe='tmux a -t fe'
-alias tco='tmux a -t co'
-
